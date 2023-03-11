@@ -11,9 +11,9 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		7B7B550FE7DBE0CF67AB38FC /* libPods-GeniusSphere-GeniusSphereTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C1FBA0C6682C3233C1F682 /* libPods-GeniusSphere-GeniusSphereTests.a */; };
+		193EFC83C1542B75A74E03F3 /* libPods-GeniusSphere.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5EB97478454AAEAF1A199FF2 /* libPods-GeniusSphere.a */; };
+		3A90BB2EBA488E01E13C8899 /* libPods-GeniusSphere-GeniusSphereTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 266CA4434140A6FC93D9E505 /* libPods-GeniusSphere-GeniusSphereTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		D3AEE011B4BA53AD6BD87E3E /* libPods-GeniusSphere.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 984C97E87AC29B5F12972261 /* libPods-GeniusSphere.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,13 +36,13 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = GeniusSphere/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GeniusSphere/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = GeniusSphere/main.m; sourceTree = "<group>"; };
-		3B0D228AE7249D03C2C03A56 /* Pods-GeniusSphere.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere.release.xcconfig"; path = "Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere.release.xcconfig"; sourceTree = "<group>"; };
-		43F9CC3C17DE70363BCD78DC /* Pods-GeniusSphere.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere.debug.xcconfig"; path = "Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere.debug.xcconfig"; sourceTree = "<group>"; };
-		72C1FBA0C6682C3233C1F682 /* libPods-GeniusSphere-GeniusSphereTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeniusSphere-GeniusSphereTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		78174C6F44037A858D555D01 /* Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig"; path = "Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig"; sourceTree = "<group>"; };
+		266CA4434140A6FC93D9E505 /* libPods-GeniusSphere-GeniusSphereTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeniusSphere-GeniusSphereTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		58E04256227C747D23B2FAEA /* Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig"; path = "Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5EB97478454AAEAF1A199FF2 /* libPods-GeniusSphere.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeniusSphere.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GeniusSphere/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		984C97E87AC29B5F12972261 /* libPods-GeniusSphere.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeniusSphere.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB8AAB2686896D08B6E9401F /* Pods-GeniusSphere-GeniusSphereTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere-GeniusSphereTests.release.xcconfig"; path = "Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests.release.xcconfig"; sourceTree = "<group>"; };
+		B8081B31FB1F0D119888DA13 /* Pods-GeniusSphere.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere.debug.xcconfig"; path = "Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere.debug.xcconfig"; sourceTree = "<group>"; };
+		E480146321F9F1CA37F56D30 /* Pods-GeniusSphere.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere.release.xcconfig"; path = "Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere.release.xcconfig"; sourceTree = "<group>"; };
+		E96906A8D5129E0EF6AA4EAF /* Pods-GeniusSphere-GeniusSphereTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeniusSphere-GeniusSphereTests.release.xcconfig"; path = "Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -51,7 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7B7B550FE7DBE0CF67AB38FC /* libPods-GeniusSphere-GeniusSphereTests.a in Frameworks */,
+				3A90BB2EBA488E01E13C8899 /* libPods-GeniusSphere-GeniusSphereTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3AEE011B4BA53AD6BD87E3E /* libPods-GeniusSphere.a in Frameworks */,
+				193EFC83C1542B75A74E03F3 /* libPods-GeniusSphere.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +100,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				984C97E87AC29B5F12972261 /* libPods-GeniusSphere.a */,
-				72C1FBA0C6682C3233C1F682 /* libPods-GeniusSphere-GeniusSphereTests.a */,
+				5EB97478454AAEAF1A199FF2 /* libPods-GeniusSphere.a */,
+				266CA4434140A6FC93D9E505 /* libPods-GeniusSphere-GeniusSphereTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -140,10 +140,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				43F9CC3C17DE70363BCD78DC /* Pods-GeniusSphere.debug.xcconfig */,
-				3B0D228AE7249D03C2C03A56 /* Pods-GeniusSphere.release.xcconfig */,
-				78174C6F44037A858D555D01 /* Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig */,
-				BB8AAB2686896D08B6E9401F /* Pods-GeniusSphere-GeniusSphereTests.release.xcconfig */,
+				B8081B31FB1F0D119888DA13 /* Pods-GeniusSphere.debug.xcconfig */,
+				E480146321F9F1CA37F56D30 /* Pods-GeniusSphere.release.xcconfig */,
+				58E04256227C747D23B2FAEA /* Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig */,
+				E96906A8D5129E0EF6AA4EAF /* Pods-GeniusSphere-GeniusSphereTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -155,12 +155,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "GeniusSphereTests" */;
 			buildPhases = (
-				E214279C339281A270328B04 /* [CP] Check Pods Manifest.lock */,
+				DFAD9AE91D0AC183740A7303 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				773E718557BACB94A25F2A47 /* [CP] Embed Pods Frameworks */,
-				978241F89A25DD0275124188 /* [CP] Copy Pods Resources */,
+				7C2ADD2BE165A4A3290760AD /* [CP] Embed Pods Frameworks */,
+				A334D2337F8D3ADB8D6BFD3E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -176,14 +176,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "GeniusSphere" */;
 			buildPhases = (
-				F6CD69516BDED4A6342BF792 /* [CP] Check Pods Manifest.lock */,
+				9E476D17BF18C9470109DA70 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				AD182493C928881F4C25B37B /* [CP] Embed Pods Frameworks */,
-				9035F31F8E9507730E5AE3AF /* [CP] Copy Pods Resources */,
+				F20342E5840A8F3257A5FD10 /* [CP] Embed Pods Frameworks */,
+				5B6C5379F8D801322D6E170B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -266,24 +266,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		773E718557BACB94A25F2A47 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9035F31F8E9507730E5AE3AF /* [CP] Copy Pods Resources */ = {
+		5B6C5379F8D801322D6E170B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -300,7 +283,46 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		978241F89A25DD0275124188 /* [CP] Copy Pods Resources */ = {
+		7C2ADD2BE165A4A3290760AD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9E476D17BF18C9470109DA70 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GeniusSphere-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A334D2337F8D3ADB8D6BFD3E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -317,24 +339,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere-GeniusSphereTests/Pods-GeniusSphere-GeniusSphereTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AD182493C928881F4C25B37B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E214279C339281A270328B04 /* [CP] Check Pods Manifest.lock */ = {
+		DFAD9AE91D0AC183740A7303 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -356,26 +361,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F6CD69516BDED4A6342BF792 /* [CP] Check Pods Manifest.lock */ = {
+		F20342E5840A8F3257A5FD10 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-GeniusSphere-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GeniusSphere/Pods-GeniusSphere-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -430,7 +430,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 78174C6F44037A858D555D01 /* Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig */;
+			baseConfigurationReference = 58E04256227C747D23B2FAEA /* Pods-GeniusSphere-GeniusSphereTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -457,7 +457,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB8AAB2686896D08B6E9401F /* Pods-GeniusSphere-GeniusSphereTests.release.xcconfig */;
+			baseConfigurationReference = E96906A8D5129E0EF6AA4EAF /* Pods-GeniusSphere-GeniusSphereTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -481,7 +481,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 43F9CC3C17DE70363BCD78DC /* Pods-GeniusSphere.debug.xcconfig */;
+			baseConfigurationReference = B8081B31FB1F0D119888DA13 /* Pods-GeniusSphere.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -509,7 +509,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B0D228AE7249D03C2C03A56 /* Pods-GeniusSphere.release.xcconfig */;
+			baseConfigurationReference = E480146321F9F1CA37F56D30 /* Pods-GeniusSphere.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -566,7 +566,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -638,7 +638,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;

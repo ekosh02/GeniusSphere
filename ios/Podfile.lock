@@ -73,7 +73,6 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - hermes-engine (0.70.7)
   - libevent (2.1.12)
   - OpenSSL-Universal (1.1.1100)
   - RCT-Folly (2021.07.22.00):
@@ -87,12 +86,6 @@ PODS:
     - DoubleConversion
     - fmt (~> 6.2.1)
     - glog
-  - RCT-Folly/Futures (2021.07.22.00):
-    - boost
-    - DoubleConversion
-    - fmt (~> 6.2.1)
-    - glog
-    - libevent
   - RCTRequired (0.70.7)
   - RCTTypeSafety (0.70.7):
     - FBLazyVector (= 0.70.7)
@@ -270,17 +263,6 @@ PODS:
     - React-logger (= 0.70.7)
     - React-perflogger (= 0.70.7)
     - React-runtimeexecutor (= 0.70.7)
-  - React-hermes (0.70.7):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2021.07.22.00)
-    - RCT-Folly/Futures (= 2021.07.22.00)
-    - React-cxxreact (= 0.70.7)
-    - React-jsi (= 0.70.7)
-    - React-jsiexecutor (= 0.70.7)
-    - React-jsinspector (= 0.70.7)
-    - React-perflogger (= 0.70.7)
   - React-jsi (0.70.7):
     - boost (= 1.76.0)
     - DoubleConversion
@@ -302,6 +284,12 @@ PODS:
   - React-jsinspector (0.70.7)
   - React-logger (0.70.7):
     - glog
+  - react-native-safe-area-context (4.5.0):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - ReactCommon/turbomodule/core
   - React-perflogger (0.70.7)
   - React-RCTActionSheet (0.70.7):
     - React-Core/RCTActionSheetHeaders (= 0.70.7)
@@ -368,6 +356,15 @@ PODS:
     - React-jsi (= 0.70.7)
     - React-logger (= 0.70.7)
     - React-perflogger (= 0.70.7)
+  - RNCMaskedView (0.2.8):
+    - React-Core
+  - RNGestureHandler (2.9.0):
+    - React-Core
+  - RNScreens (3.20.0):
+    - React-Core
+    - React-RCTImage
+  - RNSVG (13.8.0):
+    - React-Core
   - SocketRocket (0.6.0)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -400,8 +397,6 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.125.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.125.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
-  - hermes-engine (from `../node_modules/react-native/sdks/hermes/hermes-engine.podspec`)
-  - libevent (~> 2.1.12)
   - OpenSSL-Universal (= 1.1.1100)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -415,11 +410,11 @@ DEPENDENCIES:
   - React-Core/RCTWebSocket (from `../node_modules/react-native/`)
   - React-CoreModules (from `../node_modules/react-native/React/CoreModules`)
   - React-cxxreact (from `../node_modules/react-native/ReactCommon/cxxreact`)
-  - React-hermes (from `../node_modules/react-native/ReactCommon/hermes`)
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -432,6 +427,10 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -463,8 +462,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
-  hermes-engine:
-    :podspec: "../node_modules/react-native/sdks/hermes/hermes-engine.podspec"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -485,8 +482,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/CoreModules"
   React-cxxreact:
     :path: "../node_modules/react-native/ReactCommon/cxxreact"
-  React-hermes:
-    :path: "../node_modules/react-native/ReactCommon/hermes"
   React-jsi:
     :path: "../node_modules/react-native/ReactCommon/jsi"
   React-jsiexecutor:
@@ -495,6 +490,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-safe-area-context:
+    :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
     :path: "../node_modules/react-native/ReactCommon/reactperflogger"
   React-RCTActionSheet:
@@ -519,6 +516,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCMaskedView:
+    :path: "../node_modules/@react-native-masked-view/masked-view"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
+  RNScreens:
+    :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -539,7 +544,6 @@ SPEC CHECKSUMS:
   FlipperKit: cbdee19bdd4e7f05472a66ce290f1b729ba3cb86
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: 566e656aa95456a3f3f739fd76ea9a9656f2633f
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   RCT-Folly: 0080d0a6ebf2577475bda044aa59e2ca1f909cda
@@ -552,11 +556,11 @@ SPEC CHECKSUMS:
   React-Core: c57b11fd672421049038ef36881372da2605a0cd
   React-CoreModules: 2d91acffc3924adac6b508e3fc44121aa719ec40
   React-cxxreact: ee2ab13a1db086dc152421aa42dc94cc68f412a1
-  React-hermes: be9d64f5019238ce22ae4e7d242c4f2e96d60595
   React-jsi: 04031a830f9714e95d517153817ba7bfc15bfdf8
   React-jsiexecutor: e95cdd036e7947ddf87f3049319ac3064deb76b5
   React-jsinspector: 1c34fea1868136ecde647bc11fae9266d4143693
   React-logger: e9f407f9fdf3f3ce7749ae6f88affe63e8446019
+  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   React-perflogger: 52a94f38c19a518d05726624b49bfc192639374d
   React-RCTActionSheet: 7b89fe64a852bc3ae39b91dbd142ef09931ef3f7
   React-RCTAnimation: ad84bfbf8c5f6f77e65092d0c2b0506b80b5cf99
@@ -569,10 +573,14 @@ SPEC CHECKSUMS:
   React-RCTVibration: eb7837d55b87c7a4ead3ab7632ad70dca87c65dc
   React-runtimeexecutor: 7cec9ed92ebde8309902530bb566819645c84ee5
   ReactCommon: 0253d197eaa7f6689dcd3e7d5360449ab93e10df
+  RNCMaskedView: bc0170f389056201c82a55e242e5d90070e18e5a
+  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
+  RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: 92d086bb705a41cc588599b51db726ba7b1d341c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 970582e23eb21341da48769a4b930e233ff3ec6f
+PODFILE CHECKSUM: 626a6ed63b7822c14bbeb8eb5bfab2f751663885
 
 COCOAPODS: 1.11.3
