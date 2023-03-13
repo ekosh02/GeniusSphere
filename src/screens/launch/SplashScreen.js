@@ -4,11 +4,18 @@ import {useNavigation} from '@react-navigation/native';
 import {APP_COLORS} from '../../constants/colors';
 import {APP_ROUTES} from '../../constants/routes';
 import {StyleSheet} from 'react-native';
+import {useAuthProvider} from '../../providers/AuthProvider';
 
-const SplashScreen = ({navigation = useNavigation()}) => {
+const SplashScreen = props => {
+  const {isToken} = useAuthProvider();
+
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace(APP_ROUTES.BOTTOM_TAB);
+      if (isToken) {
+        props.navigation.replace(APP_ROUTES.BOTTOM_TAB);
+      } else {
+        props.navigation.replace(APP_ROUTES.SIGN_IN_SCREEN);
+      }
     }, 1500);
   }, []);
 
