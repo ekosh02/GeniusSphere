@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "851617425048",
+    "project_id": "geniussphere-5a9de",
+    "storage_bucket": "geniussphere-5a9de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:851617425048:android:f3cb3a1750ff1c198012ed",
+        "android_client_info": {
+          "package_name": "com.yeldosturapbayev.geniussphere"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "851617425048-kd899ukgidhdkna9ilqaipns12fs9snq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS62fkWZRsx7paUjR1HjAezJBDnwmO1io"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "851617425048-kd899ukgidhdkna9ilqaipns12fs9snq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "851617425048-1ig02d8sd6l7vmcmp9vulpvk0708tt6a.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kz.yeldosturapbayev.geniussphere"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
