@@ -6,20 +6,16 @@ import {APP_COLORS} from '../../constants/colors';
 import {WIDTH} from '../../constants/screenDimensions';
 import {setFontStyle} from '../../utils/setFontStyle';
 
-const Header = ({
-  label = 'Экран',
-  navigation = useNavigation(),
-  getCollection = () => undefined,
-  back = false,
-}) => {
+const Header = ({label = 'Экран', routes = ''}) => {
+  const navigation = useNavigation();
+
   const onPressGoBack = () => {
-    getCollection();
-    navigation.goBack();
+    navigation.replace(routes);
   };
 
   return (
     <View style={styles.view}>
-      {back ? (
+      {routes !== '' ? (
         <TouchableOpacity style={styles.leftView} onPress={onPressGoBack}>
           <ArrowBackIcon />
           <Text style={styles.leftText}>Назад</Text>
