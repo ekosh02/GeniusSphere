@@ -3,7 +3,6 @@ import React from 'react';
 import {FeedIcon, ProfileIcon, RequestIcon} from '../assets/icons';
 import {APP_ROUTES} from '../constants/routes';
 import FeedScreen from '../screens/tabs/bottoms/feed/FeedScreen';
-import RequestScreen from '../screens/tabs/bottoms/request/RequestScreen';
 import ProfileScreen from '../screens/tabs/bottoms/profile/ProfileScreen';
 
 const Stack = createBottomTabNavigator();
@@ -15,13 +14,6 @@ const BottomNavigation = () => {
       component: FeedScreen,
       options: {
         tabBarIcon: ({focused}) => <FeedIcon active={focused} />,
-      },
-    },
-    {
-      name: APP_ROUTES.BOTTOM_TABS.REQUEST_SCREEN,
-      component: RequestScreen,
-      options: {
-        tabBarIcon: ({focused}) => <RequestIcon active={focused} />,
       },
     },
     {
