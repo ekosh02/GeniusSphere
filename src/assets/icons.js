@@ -67,6 +67,26 @@ export const ArrowBackIcon = ({
   </Svg>
 );
 
+export const ArrowGoIcon = ({
+  width = '24',
+  height = '24',
+  color = APP_COLORS.PRIMARY,
+}) => (
+  <Svg
+    width={width}
+    height={height}
+    viewBox={`0 0 ${width} ${height}`}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <Path
+      d="M10 16L14 12L10 8"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
 export const ProfileIcon = ({
   active = false,
   activeColor = APP_COLORS.PRIMARY,

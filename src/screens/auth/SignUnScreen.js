@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, StyleSheet, Text} from 'react-native';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import Header from '../../components/bars/Header';
 import Viewer from '../../components/views/Viewer';
 import {APP_ROUTES} from '../../constants/routes';
@@ -16,10 +16,10 @@ const SignUnScreen = props => {
   const {setIsToken} = useAuthProvider();
 
   const [data, setData] = useState({
-    collectionKey: {},
+    collection_key: {},
     keyLoading: false,
     inputKey: '',
-    showMore: false,
+    roleId: 0,
     buttonLoading: false,
   });
 
@@ -31,15 +31,25 @@ const SignUnScreen = props => {
   });
 
   useEffect(() => {
-    if (data.collectionKey === data.inputKey) {
+    if (data?.collection_key?.supervisor_key === data.inputKey) {
       setData(prev => ({
         ...prev,
-        showMore: true,
+        roleId: 3,
+      }));
+    } else if (data?.collection_key?.teacher_key === data.inputKey) {
+      setData(prev => ({
+        ...prev,
+        roleId: 2,
+      }));
+    } else if (data?.collection_key?.student_key === data.inputKey) {
+      setData(prev => ({
+        ...prev,
+        roleId: 1,
       }));
     } else {
       setData(prev => ({
         ...prev,
-        showMore: false,
+        roleId: 0,
       }));
     }
   }, [data.inputKey]);
@@ -60,7 +70,7 @@ const SignUnScreen = props => {
       .then(response => {
         setData(prev => ({
           ...prev,
-          collectionKey: response?._data?.adminKey,
+          collection_key: response?._data,
           keyLoading: false,
         }));
       })
@@ -74,114 +84,162 @@ const SignUnScreen = props => {
   };
 
   const onPressSignUp = () => {
-    const full_name = dataSourse.current.full_name;
-    const email = dataSourse.current.email;
-    const password = dataSourse.current.password;
-    const repeat_password = dataSourse.current.repeat_password;
-    setData(prev => ({
-      ...prev,
-      buttonLoading: true,
-    }));
+    setData(prev => ({...prev, buttonLoading: true}));
+    const {full_name, email, password, repeat_password} = dataSourse.current;
 
     if (!full_name) {
       Alert.alert('Поле имени не должно содержать пустую строку');
-      setData(prev => ({
-        ...prev,
-        buttonLoading: false,
-      }));
+      setData(prev => ({...prev, buttonLoading: false}));
       return;
     }
     if (email?.includes(' ') || email == undefined || email?.length < 6) {
       Alert.alert(
         'Поле электронной почты не может содержать менее 5 символов или содержать пустую строку',
       );
-      setData(prev => ({
-        ...prev,
-        buttonLoading: false,
-      }));
+      setData(prev => ({...prev, buttonLoading: false}));
       return;
     }
-    if (
-      password?.includes(' ') ||
-      password == undefined ||
-      password?.length < 5
-    ) {
-      Alert.alert(
-        'Поле пароль не может быть меньше 5 символов или содержать пустую строку',
-      );
-      setData(prev => ({
-        ...prev,
-        buttonLoading: false,
-      }));
-      return;
-    }
-    if (
-      repeat_password?.includes(' ') ||
-      repeat_password == undefined ||
-      repeat_password?.length < 5
-    ) {
-      Alert.alert(
-        'Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку',
-      );
-      setData(prev => ({
-        ...prev,
-        buttonLoading: false,
-      }));
-      return;
-    }
-    if (password != repeat_password) {
-      Alert.alert('Пароли не подходят');
-      setData(prev => ({
-        ...prev,
-        buttonLoading: false,
-      }));
-      return;
-    }
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(response => {
-        firestore()
-          .collection(FIRESTORE_COLLECTIONS.USERS)
-          .doc(response?.user?.uid)
-          .set({
-            id: response?.user?.uid,
-            full_name: full_name,
-            email: email,
-            email: email,
-            role: 1,
-          })
-          .then(async () => {
-            console.log('Sign up', response);
-            const token = response?.user?.uid;
-            await setStorage(APP_KEYS.TOKEN, token);
-            setIsToken(token);
+    if (data.roleId === 3) {
+      if (
+        password?.includes(' ') ||
+        password == undefined ||
+        password?.length < 5
+      ) {
+        Alert.alert(
+          'Поле пароль не может быть меньше 5 символов или содержать пустую строку',
+        );
+        setData(prev => ({
+          ...prev,
+          buttonLoading: false,
+        }));
+        return;
+      }
+      if (
+        repeat_password?.includes(' ') ||
+        repeat_password == undefined ||
+        repeat_password?.length < 5
+      ) {
+        Alert.alert(
+          'Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку',
+        );
+        setData(prev => ({
+          ...prev,
+          buttonLoading: false,
+        }));
+        return;
+      }
+      if (password != repeat_password) {
+        Alert.alert('Пароли не подходят');
+        setData(prev => ({
+          ...prev,
+          buttonLoading: false,
+        }));
+        return;
+      }
+      auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(response => {
+          firestore()
+            .collection(FIRESTORE_COLLECTIONS.USERS)
+            .doc(response?.user?.uid)
+            .set({
+              id: response?.user?.uid,
+              full_name: full_name,
+              email: email,
+              role: data.roleId,
+            })
+            .then(async () => {
+              console.log('Sign up', response);
+              const token = response?.user?.uid;
+              await setStorage(APP_KEYS.TOKEN, token);
+              setIsToken(token);
+              setData(prev => ({
+                ...prev,
+                buttonLoading: false,
+              }));
+              props.navigation.navigate(APP_ROUTES.BOTTOM_TAB);
+            });
+        })
+        .catch(error => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log('That email address is already in use!');
+            Alert.alert(
+              strings['Этот адрес электронной почты уже используется!'],
+            );
             setData(prev => ({
               ...prev,
               buttonLoading: false,
             }));
-            props.navigation.navigate(APP_ROUTES.BOTTOM_TAB);
-          });
+            return;
+          }
+
+          if (error.code === 'auth/invalid-email') {
+            console.log('That email address is invalid!');
+            Alert.alert(
+              strings['Этот адрес электронной почты недействителен!'],
+            );
+            setData(prev => ({
+              ...prev,
+              buttonLoading: false,
+            }));
+            return;
+          }
+          console.log(error);
+          Alert.alert(strings['Произошла неизвестная ошибка']);
+          setData(prev => ({
+            ...prev,
+            buttonLoading: false,
+          }));
+          return;
+        });
+    } else if (data.roleId === 2 || data.roleId === 1) {
+      sendRequest(data.roleId);
+      return;
+    } else {
+      setData(prev => ({
+        ...prev,
+        buttonLoading: false,
+      }));
+      return;
+    }
+  };
+
+  const sendRequest = roleId => {
+    const api =
+      roleId === 2
+        ? FIRESTORE_COLLECTIONS.TEACHER_REQUEST
+        : FIRESTORE_COLLECTIONS.STUDENT_REQUEST;
+
+    const collection = firestore().collection(api);
+    const id = collection.doc().id;
+    const collectionWithId = collection.doc(id);
+
+    const data = {
+      id: id,
+      full_name: dataSourse.current.full_name,
+      email: dataSourse.current.email,
+      role: roleId,
+    };
+
+    collectionWithId
+      .set(data)
+      .then(response => {
+        console.log('response', response);
+        Alert.alert(
+          `Ваш запрос отправлен ${roleId === 2 ? `Руководителю` : `Учетелю`}`,
+        );
+        setData(prev => ({
+          ...prev,
+          buttonLoading: false,
+        }));
       })
       .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-          Alert.alert(
-            strings['Этот адрес электронной почты уже используется!'],
-          );
-          setLoading(false);
-          return;
-        }
-
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-          Alert.alert(strings['Этот адрес электронной почты недействителен!']);
-          setLoading(false);
-          return;
-        }
-
         console.log(error);
-        Alert.alert(strings['Произошла неизвестная ошибка']);
-        setLoading(false);
+        Alert.alert('Произошла неизвестная ошибка');
+        setData(prev => ({
+          ...prev,
+          buttonLoading: false,
+        }));
         return;
       });
   };
@@ -201,7 +259,7 @@ const SignUnScreen = props => {
             }))
           }
         />
-        {data.showMore ? (
+        {data.roleId !== 0 ? (
           <Viewer>
             <Input
               placeholder="Полное имя"
@@ -211,18 +269,30 @@ const SignUnScreen = props => {
               placeholder="Электронная почта"
               getValue={value => (dataSourse.current.email = value)}
             />
-            <Input
-              placeholder="Пароль"
-              getValue={value => (dataSourse.current.password = value)}
-              secureTextEntry
-            />
-            <Input
-              placeholder="Повторите пароль"
-              getValue={value => (dataSourse.current.repeat_password = value)}
-              secureTextEntry
-            />
+            {data.roleId === 1 || data.roleId === 2 ? null : (
+              <View>
+                <Input
+                  placeholder="Пароль"
+                  getValue={value => (dataSourse.current.password = value)}
+                  secureTextEntry
+                />
+                <Input
+                  placeholder="Повторите пароль"
+                  getValue={value =>
+                    (dataSourse.current.repeat_password = value)
+                  }
+                  secureTextEntry
+                />
+              </View>
+            )}
             <PrimaryButton
-              label="Зарегистрироваться"
+              label={
+                data.roleId === 3
+                  ? 'Зарегистрироваться'
+                  : data.roleId === 2 || data.roleId === 1
+                  ? 'Отправить запрос'
+                  : 'Ошибка'
+              }
               onPress={onPressSignUp}
               style={styles.marginTop}
               loader={data.buttonLoading}

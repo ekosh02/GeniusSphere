@@ -10,7 +10,7 @@ import {useAuthProvider} from '../providers/AuthProvider';
 import {getStorage} from '../utils/AsyncStorage';
 import {APP_KEYS} from '../constants/keys';
 import Viewer from '../components/views/Viewer';
-import ProfileScreen from '../screens/tabs/bottoms/profile/ProfileScreen';
+import RequestScreen from '../screens/tabs/bottoms/profile/menu/RequestScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,6 +47,10 @@ const RootNavigation = () => {
     {
       name: APP_ROUTES.BOTTOM_TAB,
       component: BottomNavigation,
+    },
+    {
+      name: APP_ROUTES.REQUEST_SCREEN,
+      component: RequestScreen,
     },
   ];
 
