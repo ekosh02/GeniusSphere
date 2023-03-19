@@ -1,8 +1,8 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
-import {FeedIcon, ProfileIcon, RequestIcon} from '../assets/icons';
+import {TaskIcon, ProfileIcon} from '../assets/icons';
 import {APP_ROUTES} from '../constants/routes';
-import FeedScreen from '../screens/tabs/bottoms/feed/FeedScreen';
+import SupervisorTasksScreen from '../screens/tabs/bottoms/tasks/supervisor/SupervisorTasksScreen';
 import ProfileScreen from '../screens/tabs/bottoms/profile/ProfileScreen';
 
 const Stack = createBottomTabNavigator();
@@ -10,10 +10,10 @@ const Stack = createBottomTabNavigator();
 const BottomNavigation = () => {
   const routes = [
     {
-      name: APP_ROUTES.BOTTOM_TABS.FEED_SCREEN,
-      component: FeedScreen,
+      name: APP_ROUTES.BOTTOM_TABS.SUPERVISOR_TASKS_SCREEN,
+      component: SupervisorTasksScreen,
       options: {
-        tabBarIcon: ({focused}) => <FeedIcon active={focused} />,
+        tabBarIcon: ({focused}) => <TaskIcon active={focused} />,
       },
     },
     {

@@ -3,6 +3,7 @@ export const FIRESTORE_COLLECTIONS = {
   STATUS: 'status',
   STUDENT_REQUEST: 'student_request',
   TEACHER_REQUEST: 'teacher_request',
+  SUPERVISOR_TASKS: 'supervisor_tasks',
 };
 
 export const FIRESTORE_ID = {

@@ -5,4 +5,6 @@ export const APP_COLORS = {
   PLACEHOLDER: 'rgba(0, 0, 0, 0.4)',
   GRAY_BACKGROUND: 'rgba(0, 0, 0, 0.05)',
   GRAY: '#737373',
+  BLUE: '#204ebe',
+  GREEN: '#3b855d',
 };

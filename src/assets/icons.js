@@ -140,7 +140,7 @@ export const ProfileIcon = ({
   );
 };
 
-export const FeedIcon = ({
+export const TaskIcon = ({
   active = false,
   activeColor = APP_COLORS.PRIMARY,
   passiveColor = APP_COLORS.GRAY,
@@ -338,3 +338,27 @@ export const RequestIcon = ({
     </Svg>
   );
 };
+
+export const PlusIcon = ({size = 32, color = 'white'}) => (
+  <Svg
+    width={size}
+    height={size}
+    viewBox={`0 0 ${size} ${size}`}
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <Path
+      d="M8.95752 16H24.0425"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M16.5 8.45753V23.5425"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
