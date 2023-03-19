@@ -20,9 +20,11 @@ import TextButton from '../../../../../components/buttons/TextButton';
 import RowView from '../../../../../components/views/RowView';
 import Input from '../../../../../components/inputs/Input';
 import auth from '@react-native-firebase/auth';
+import { useUserProvider } from '../../../../../providers/UserProvider';
 
 const RequestScreen = props => {
-  const role = props?.route?.params?.params;
+  const {userData} = useUserProvider();
+
 
   const [data, setData] = useState({
     collection: {},
@@ -49,7 +51,7 @@ const RequestScreen = props => {
     }));
     await firestore()
       .collection(
-        role === 3
+        userData.role === 3
           ? FIRESTORE_COLLECTIONS.TEACHER_REQUEST
           : FIRESTORE_COLLECTIONS.STUDENT_REQUEST,
       )
@@ -102,12 +104,12 @@ const RequestScreen = props => {
             id: response?.user?.uid,
             full_name: data.modalData.full_name,
             email: data.modalData.email,
-            role: role === 3 ? 2 : 1,
+            role: userData.role === 3 ? 2 : 1,
           })
           .then(() => {
             const docRef = firestore()
               .collection(
-                role === 3
+                userData.role === 3
                   ? FIRESTORE_COLLECTIONS.TEACHER_REQUEST
                   : FIRESTORE_COLLECTIONS.STUDENT_REQUEST,
               )

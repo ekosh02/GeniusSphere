@@ -1,27 +1,27 @@
 import React, {createContext, useContext, useState} from 'react';
 
 const Settings = createContext({
-  isToken: '',
-  setIsToken: () => {},
+  userData: {},
+  setUserData: () => {},
 });
 
-const useAuthProvider = () => {
+const useUserProvider = () => {
   const value = useContext(Settings);
   return value;
 };
 
-const AuthProvider = ({children}) => {
-  const [isToken, setIsToken] = useState('');
+const UserProvider = ({children}) => {
+  const [userData, setUserData] = useState({});
 
   return (
     <Settings.Provider
       value={{
-        isToken,
-        setIsToken,
+        userData,
+        setUserData,
       }}>
       {children}
     </Settings.Provider>
   );
 };
 
-export {useAuthProvider, AuthProvider};
+export {useUserProvider, UserProvider};

@@ -7,13 +7,13 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Input from '../../components/inputs/Input';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
-import {setStorage} from '../../utils/AsyncStorage';
+import {setStorageObject} from '../../utils/AsyncStorage';
 import {APP_KEYS} from '../../constants/keys';
-import {useAuthProvider} from '../../providers/AuthProvider';
+import {useUserProvider} from '../../providers/UserProvider';
 import {FIRESTORE_COLLECTIONS, FIRESTORE_ID} from '../../constants/firestore';
 
 const SignUnScreen = props => {
-  const {setIsToken} = useAuthProvider();
+  const {setUserData} = useUserProvider();
 
   const [data, setData] = useState({
     collection_key: {},
@@ -151,8 +151,14 @@ const SignUnScreen = props => {
             .then(async () => {
               console.log('Sign up', response);
               const token = response?.user?.uid;
-              await setStorage(APP_KEYS.TOKEN, token);
-              setIsToken(token);
+              const data = {
+                id: token,
+                full_name: full_name,
+                email: email,
+                role: data.roleId,
+              };
+              await setStorageObject(APP_KEYS.USER_DATA, data);
+              setUserData(data);
               setData(prev => ({
                 ...prev,
                 buttonLoading: false,

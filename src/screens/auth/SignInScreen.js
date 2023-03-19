@@ -5,14 +5,17 @@ import Header from '../../components/bars/Header';
 import Input from '../../components/inputs/Input';
 import PrimaryButton from '../../components/buttons/PrimaryButton';
 import auth from '@react-native-firebase/auth';
-import {useAuthProvider} from '../../providers/AuthProvider';
-import {setStorage} from '../../utils/AsyncStorage';
+import {setStorageObject} from '../../utils/AsyncStorage';
 import {APP_KEYS} from '../../constants/keys';
 import {APP_ROUTES} from '../../constants/routes';
 import TextButton from '../../components/buttons/TextButton';
+import {useUserProvider} from '../../providers/UserProvider';
+import firestore from '@react-native-firebase/firestore';
+import {FIRESTORE_COLLECTIONS} from '../../constants/firestore';
 
 const SignInScreen = props => {
-  const {setIsToken} = useAuthProvider();
+  const {setUserData} = useUserProvider();
+
   const [loading, setLoading] = useState(false);
 
   let data = useRef({
@@ -47,9 +50,22 @@ const SignInScreen = props => {
       .then(async response => {
         console.log('Sign in', response);
         const token = response?.user?.uid;
-        setIsToken(token);
-        setStorage(APP_KEYS.TOKEN, token);
-        setLoading(false);
+        await firestore()
+          .collection(FIRESTORE_COLLECTIONS.USERS)
+          .doc(token)
+          .get()
+          .then(response => {
+            console.log('user', response._data);
+            setUserData(response._data);
+            setStorageObject(APP_KEYS.USER_DATA, response._data);
+            setLoading(false);
+          })
+          .catch(error => {
+            console.log(error);
+            setLoading(false);
+            return;
+          });
+
         props.navigation.replace(APP_ROUTES.BOTTOM_TAB);
       })
       .catch(error => {

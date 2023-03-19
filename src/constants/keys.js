@@ -1,3 +1,3 @@
 export const APP_KEYS = {
-  TOKEN: 'TOKEN',
+  USER_DATA: 'USER_DATA',
 };

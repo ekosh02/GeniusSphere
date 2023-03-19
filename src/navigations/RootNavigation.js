@@ -6,8 +6,8 @@ import SplashScreen from '../screens/launch/SplashScreen';
 import SignInScreen from '../screens/auth/SignInScreen';
 import SignUnScreen from '../screens/auth/SignUnScreen';
 import BottomNavigation from './BottomNavigation';
-import {useAuthProvider} from '../providers/AuthProvider';
-import {getStorage} from '../utils/AsyncStorage';
+import {useUserProvider} from '../providers/UserProvider';
+import {getStorageObject} from '../utils/AsyncStorage';
 import {APP_KEYS} from '../constants/keys';
 import Viewer from '../components/views/Viewer';
 import RequestScreen from '../screens/tabs/bottoms/profile/menu/RequestScreen';
@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator();
 
 const RootNavigation = () => {
   const [loading, setLoading] = useState(false);
-  const {setIsToken} = useAuthProvider();
+  const {userData, setUserData} = useUserProvider();
 
   useEffect(() => {
     getData();
@@ -24,9 +24,9 @@ const RootNavigation = () => {
 
   const getData = async () => {
     setLoading(true);
-    const token = await getStorage(APP_KEYS.TOKEN);
-    if (token) {
-      setIsToken(token);
+    const user = await getStorageObject(APP_KEYS.USER_DATA);
+    if (user) {
+      setUserData(user);
     }
     setLoading(false);
   };

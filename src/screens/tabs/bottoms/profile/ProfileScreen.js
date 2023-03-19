@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Header from '../../../../components/bars/Header';
 import Viewer from '../../../../components/views/Viewer';
 import RowView from '../../../../components/views/RowView';
@@ -6,18 +6,17 @@ import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {WIDTH} from '../../../../constants/screenDimensions';
 import {APP_COLORS} from '../../../../constants/colors';
 import TextButton from '../../../../components/buttons/TextButton';
-import {useAuthProvider} from '../../../../providers/AuthProvider';
+import {useUserProvider} from '../../../../providers/UserProvider';
 import auth from '@react-native-firebase/auth';
 import {APP_KEYS} from '../../../../constants/keys';
-import {setStorage} from '../../../../utils/AsyncStorage';
+import {setStorageObject} from '../../../../utils/AsyncStorage';
 import {APP_ROUTES} from '../../../../constants/routes';
-import firestore from '@react-native-firebase/firestore';
 import {setFontStyle} from '../../../../utils/setFontStyle';
-import {FIRESTORE_COLLECTIONS} from '../../../../constants/firestore';
 import {ArrowGoIcon} from '../../../../assets/icons';
 
 const ProfileScreen = props => {
-  const {isToken, setIsToken} = useAuthProvider();
+  const {userData, setUserData} = useUserProvider();
+
   const [data, setData] = useState({
     collection: {},
     screenLoading: false,
@@ -29,43 +28,18 @@ const ProfileScreen = props => {
       name: 'Заявки',
       router: APP_ROUTES.REQUEST_SCREEN,
       show:
-        data.collection.role === 2 || data.collection.role === 3 ? true : false,
-      params: data.collection.role,
+      userData.role === 2 || userData.role === 3 ? true : false,
+      params: null,
     },
   ];
-
-  useEffect(() => {
-    getCollection();
-  }, []);
-
-  const getCollection = async () => {
-    setData(prev => ({...prev, screenLoading: true}));
-    await firestore()
-      .collection(FIRESTORE_COLLECTIONS.USERS)
-      .doc(isToken)
-      .get()
-      .then(response => {
-        console.log('user', response);
-        setData(prev => ({
-          ...prev,
-          screenLoading: false,
-          collection: response?._data,
-        }));
-      })
-      .catch(error => {
-        console.log(error);
-        setData(prev => ({...prev, screenLoading: false}));
-        return;
-      });
-  };
 
   const onPressSignOut = () => {
     setData(prev => ({...prev, buttonLoading: true}));
     auth()
       .signOut()
       .then(async () => {
-        await setStorage(APP_KEYS.TOKEN, '');
-        setIsToken('');
+        await setStorageObject(APP_KEYS.USER_DATA, {});
+        setUserData({});
         console.log('Signed out');
         setData(prev => ({...prev, buttonLoading: false}));
         props.navigation.reset({
@@ -102,10 +76,10 @@ const ProfileScreen = props => {
           <View style={styles.avator} />
           <View style={styles.avatorCol}>
             <Text style={styles.name} numberOfLines={1}>
-              {data.collection.full_name}
+              {userData.full_name}
             </Text>
             <Text style={styles.email} numberOfLines={1}>
-              {data.collection.email}
+              {userData.email}
             </Text>
           </View>
         </RowView>
@@ -116,7 +90,7 @@ const ProfileScreen = props => {
               style={styles.menuRow}
               activeOpacity={0.5}
               key={value.router}
-              onPress={() => onPressMenu(value.router, value.params)}>
+              onPress={() => onPressMenu(value.router)}>
               <Text style={styles.menuText}>{value.name}</Text>
               <ArrowGoIcon />
             </TouchableOpacity>
