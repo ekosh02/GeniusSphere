@@ -10,6 +10,7 @@ const Input = ({
   placeholder = 'Введите значение',
   keyboardType = 'default', // number-pad, phone-pad
   secureTextEntry = false,
+  multiline = false,
   getValue = () => undefined,
   ...props
 }) => {
@@ -43,7 +44,12 @@ const Input = ({
       ) : null}
       <TextInput
         placeholder={placeholder}
-        style={[styles.input, {borderColor: focusBorderColor}, inputStyle]}
+        multiline={multiline}
+        style={[
+          styles.input,
+          {borderColor: focusBorderColor, height: multiline ? 148 : 42},
+          inputStyle,
+        ]}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry && hidePassword}
         placeholderTextColor={focusPlaceHolderColor}
@@ -64,7 +70,6 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   input: {
-    height: 42,
     borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 8,
