@@ -2,16 +2,22 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {TaskIcon, ProfileIcon} from '../assets/icons';
 import {APP_ROUTES} from '../constants/routes';
-import SupervisorTasksScreen from '../screens/tabs/bottoms/tasks/supervisor/SupervisorTasksScreen';
+import TasksScreen from '../screens/tabs/bottoms/tasks/TasksScreen';
 import ProfileScreen from '../screens/tabs/bottoms/profile/ProfileScreen';
+import {useUserProvider} from '../providers/UserProvider';
+
 
 const Stack = createBottomTabNavigator();
 
 const BottomNavigation = () => {
+  const {userData} = useUserProvider();
+
+  const {role} = userData;
+
   const routes = [
     {
-      name: APP_ROUTES.BOTTOM_TABS.SUPERVISOR_TASKS_SCREEN,
-      component: SupervisorTasksScreen,
+      name: APP_ROUTES.BOTTOM_TABS.TASKS_SCREEN,
+      component: TasksScreen,
       options: {
         tabBarIcon: ({focused}) => <TaskIcon active={focused} />,
       },
@@ -25,6 +31,8 @@ const BottomNavigation = () => {
     },
   ];
 
+  const filteredRoutes = role === 1 ? routes.slice(1) : routes;
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -34,7 +42,7 @@ const BottomNavigation = () => {
           height: Platform.OS === 'ios' ? 86 : 56,
         },
       }}>
-      {routes.map((route, index) => (
+      {filteredRoutes.map((route, index) => (
         <Stack.Screen
           key={route.name}
           name={route.name}

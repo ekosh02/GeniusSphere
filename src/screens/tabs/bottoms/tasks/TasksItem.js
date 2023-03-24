@@ -1,21 +1,18 @@
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {checkTaskColor} from '../../../../../utils/checkTaskColor';
-import {checkTaskStatus} from '../../../../../utils/checkTaskStatus';
-import {setFontStyle} from '../../../../../utils/setFontStyle';
+import {WIDTH} from '../../../../constants/screenDimensions';
+import {checkTaskColor} from '../../../../utils/checkTaskColor';
+import {checkTaskStatus} from '../../../../utils/checkTaskStatus';
+import {setFontStyle} from '../../../../utils/setFontStyle';
 
-const SupervosorTasksItem = ({
-  id,
-  name,
-  description,
-  from,
-  to,
-  date,
-  status,
-  onPress = () => undefined,
-}) => {
+const TasksItem = ({id, title, status, onPress = () => undefined}) => {
   return (
-    <TouchableOpacity style={styles.view} onPress={onPress} activeOpacity={0.8}>
-      <Text style={styles.title}>{name}</Text>
+    <TouchableOpacity
+      style={styles.view}
+      onPress={() => onPress(id)}
+      activeOpacity={0.8}>
+      <Text style={styles.title} numberOfLines={1}>
+        {title}
+      </Text>
       <View
         style={[styles.statusView, {backgroundColor: checkTaskColor(status)}]}>
         <Text style={styles.statusText}>{checkTaskStatus(status)}</Text>
@@ -50,6 +47,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   title: {
+    width: WIDTH - 142,
     ...setFontStyle(18, '500'),
   },
   statusText: {
@@ -57,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SupervosorTasksItem;
+export default TasksItem;

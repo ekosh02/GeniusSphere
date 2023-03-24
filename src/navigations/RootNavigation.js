@@ -11,6 +11,8 @@ import {getStorageObject} from '../utils/AsyncStorage';
 import {APP_KEYS} from '../constants/keys';
 import Viewer from '../components/views/Viewer';
 import RequestScreen from '../screens/tabs/bottoms/profile/menu/RequestScreen';
+import TaskDetailsScreen from '../screens/tabs/bottoms/tasks/TaskDetailsScreen';
+import NewTaskScreen from '../screens/tabs/bottoms/tasks/NewTaskScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +53,14 @@ const RootNavigation = () => {
     {
       name: APP_ROUTES.REQUEST_SCREEN,
       component: RequestScreen,
+    },
+    {
+      name: APP_ROUTES.TASK_DETAILS_SCREEN,
+      component: TaskDetailsScreen,
+    },
+    {
+      name: APP_ROUTES.NEW_TASK_SCREEN,
+      component: NewTaskScreen,
     },
   ];
 

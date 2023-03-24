@@ -1,14 +1,18 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import Viewer from '../../../../../components/views/Viewer';
-import Header from '../../../../../components/bars/Header';
-import {PlusIcon} from '../../../../../assets/icons';
-import {APP_COLORS} from '../../../../../constants/colors';
-import {FIRESTORE_COLLECTIONS} from '../../../../../constants/firestore';
+import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import Viewer from '../../../../components/views/Viewer';
+import Header from '../../../../components/bars/Header';
+import {PlusIcon} from '../../../../assets/icons';
+import {APP_COLORS} from '../../../../constants/colors';
+import {FIRESTORE_COLLECTIONS} from '../../../../constants/firestore';
 import firestore from '@react-native-firebase/firestore';
-import SupervosorTasksItem from './SupervosorTasksItem';
+import TasksItem from './TasksItem';
+import {APP_ROUTES} from '../../../../constants/routes';
+import {useUserProvider} from '../../../../providers/UserProvider';
 
-const SupervisorTasksScreen = () => {
+const TasksScreen = props => {
+  const {userData} = useUserProvider();
+
   const [data, setData] = useState({
     collection: {},
     loading: false,
@@ -25,7 +29,13 @@ const SupervisorTasksScreen = () => {
       .get()
       .then(response => {
         console.log(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS, response.docs);
-        setData(prev => ({...prev, collection: response.docs, loading: false}));
+        const data =
+          userData.role === 2
+            ? response._docs.filter(item => item._data.to === userData.id)
+            : userData.role === 3
+            ? response._docs
+            : [];
+        setData(prev => ({...prev, collection: data, loading: false}));
       })
       .catch(error => {
         console.log(error);
@@ -33,22 +43,30 @@ const SupervisorTasksScreen = () => {
       });
   };
 
-  const onPressSupervosorTasksItem = () => {
-    console.log('press');
+  const onPressSupervisorTasksItem = id => {
+    props.navigation.navigate(APP_ROUTES.TASK_DETAILS_SCREEN, {
+      id: id,
+    });
+  };
+
+  const onPressSupervisorNewTask = id => {
+    props.navigation.navigate(APP_ROUTES.NEW_TASK_SCREEN, {
+      getCollection: getCollection,
+    });
   };
 
   const renderReqest = useCallback(item => {
-    const {id, name, description, from, to, date, status} = item?.item?._data;
+    const {id, title, description, from, to, date, status} = item?.item?._data;
     return (
-      <SupervosorTasksItem
+      <TasksItem
         id={id}
-        name={name}
+        title={title}
         description={description}
         from={from}
         to={to}
         date={date}
         status={status}
-        onPress={onPressSupervosorTasksItem}
+        onPress={onPressSupervisorTasksItem}
       />
     );
   }, []);
@@ -57,7 +75,7 @@ const SupervisorTasksScreen = () => {
 
   return (
     <Viewer>
-      <Header />
+      <Header label="Заданий" />
       <Viewer loader={data.loading}>
         <FlatList
           data={data.collection}
@@ -69,12 +87,14 @@ const SupervisorTasksScreen = () => {
           onRefresh={getCollection}
           refreshing={data.loading}
         />
-        <TouchableOpacity
-          style={styles.plusIcon}
-          onPress={null}
-          activeOpacity={0.8}>
-          <PlusIcon />
-        </TouchableOpacity>
+        {userData.role === 3 ? (
+          <TouchableOpacity
+            style={styles.plusIcon}
+            onPress={onPressSupervisorNewTask}
+            activeOpacity={0.8}>
+            <PlusIcon />
+          </TouchableOpacity>
+        ) : null}
       </Viewer>
     </Viewer>
   );
@@ -98,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SupervisorTasksScreen;
+export default TasksScreen;

@@ -27,8 +27,7 @@ const ProfileScreen = props => {
     {
       name: 'Заявки',
       router: APP_ROUTES.REQUEST_SCREEN,
-      show:
-      userData.role === 2 || userData.role === 3 ? true : false,
+      show: userData.role === 2 || userData.role === 3 ? true : false,
       params: null,
     },
   ];
@@ -48,15 +47,16 @@ const ProfileScreen = props => {
         });
       })
       .catch(error => {
-        console.log(error);
         if (error.code === 'auth/no-current-user') {
           Alert.alert('Ни один пользователь не вошел в систему');
+          console.log('error', error.code);
+          setData(prev => ({...prev, buttonLoading: false}));
+          return;
+        } else {
+          console.log('error', error);
           setData(prev => ({...prev, buttonLoading: false}));
           return;
         }
-        Alert.alert('');
-        setData(prev => ({...prev, buttonLoading: false}));
-        return;
       });
   };
 
