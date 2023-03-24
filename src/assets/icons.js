@@ -362,3 +362,71 @@ export const PlusIcon = ({size = 32, color = 'white'}) => (
     />
   </Svg>
 );
+
+export const ArrowUpIcon = ({
+  width = '10',
+  height = '6',
+  color = APP_COLORS.FONT,
+}) => (
+  <Svg
+    width={width}
+    height={height}
+    viewBox="0 0 10 6"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <Path
+      d="M9 5L5 1L1 5"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const ArrowDownIcon = ({
+  width = '10',
+  height = '6',
+  color = APP_COLORS.FONT,
+}) => (
+  <Svg
+    width={width}
+    height={height}
+    viewBox="0 0 10 6"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <Path
+      d="M1 1L5 5L9 1"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
+
+export const Xicon = ({
+  color = APP_COLORS.FONT
+}) => (
+  <Svg
+    width="40"
+    height="40"
+    viewBox="0 0 40 40"
+    fill={color}
+    xmlns="http://www.w3.org/2000/svg">
+    <Path
+      d="M13.3334 13.3335L26.6667 26.6668"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M26.6667 13.3335L13.3334 26.6668"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </Svg>
+);
