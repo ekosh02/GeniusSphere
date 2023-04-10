@@ -109,7 +109,15 @@ const ProfileScreen = props => {
 
 const styles = StyleSheet.create({
   profile: {
-    backgroundColor: APP_COLORS.GRAY_BACKGROUND,
+    backgroundColor: undefined,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   avatarView: {
     height: 118,

@@ -14,7 +14,7 @@ import {useUserProvider} from '../../../../providers/UserProvider';
 import RowView from '../../../../components/views/RowView';
 
 const TaskDetailsScreen = props => {
-  const {id} = props?.route?.params;
+  const {id, updateGetCollection} = props?.route?.params;
   const {userData} = useUserProvider();
 
   const [dataSource, setDataSource] = useState({
@@ -74,6 +74,7 @@ const TaskDetailsScreen = props => {
         console.log('Поле status успешно обновлено');
         onPressModalVisible();
         getCollection();
+        updateGetCollection();
       })
       .catch(error => {
         console.error(error);

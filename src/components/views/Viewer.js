@@ -7,12 +7,13 @@ const Viewer = ({
   children,
   style = {},
   loader = false,
+  loaderStyle = {},
   scroll = false,
   safeArea = false,
   bounces = false,
 }) => {
   if (loader) {
-    return <Loader />;
+    return <Loader style={loaderStyle}/>;
   }
 
   if (scroll) {

@@ -1,8 +1,15 @@
 import React, {useState} from 'react';
-import {TextInput, StyleSheet, View, TouchableOpacity} from 'react-native';
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import {HideEyeIcon, ShowEyeIcon} from '../../assets/icons';
 import {APP_COLORS} from '../../constants/colors';
 import useToggle from '../../hooks/useToggle';
+import {setFontStyle} from '../../utils/setFontStyle';
 
 const Input = ({
   style = {},
@@ -11,7 +18,9 @@ const Input = ({
   keyboardType = 'default', // number-pad, phone-pad
   secureTextEntry = false,
   multiline = false,
+  rightButton = false,
   getValue = () => undefined,
+  onPress = () => undefined,
   ...props
 }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -40,6 +49,11 @@ const Input = ({
           onPress={setHidePassword}
           activeOpacity={0.5}>
           {hidePassword ? <HideEyeIcon /> : <ShowEyeIcon />}
+        </TouchableOpacity>
+      ) : null}
+      {rightButton ? (
+        <TouchableOpacity onPress={onPress}>
+          <Text style={styles.sendPosition}>Send</Text>
         </TouchableOpacity>
       ) : null}
       <TextInput
@@ -83,6 +97,13 @@ const styles = StyleSheet.create({
     height: 32,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  sendPosition: {
+    position: 'absolute',
+    zIndex: 1,
+    ...setFontStyle(),
+    right: 13,
+    marginTop: 8,
   },
 });
 

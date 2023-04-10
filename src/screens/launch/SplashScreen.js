@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import Viewer from '../../components/views/Viewer';
-import {useNavigation} from '@react-navigation/native';
 import {APP_COLORS} from '../../constants/colors';
 import {APP_ROUTES} from '../../constants/routes';
 import {StyleSheet} from 'react-native';

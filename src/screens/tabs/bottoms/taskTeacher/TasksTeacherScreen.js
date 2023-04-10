@@ -6,11 +6,11 @@ import {PlusIcon} from '../../../../assets/icons';
 import {APP_COLORS} from '../../../../constants/colors';
 import {FIRESTORE_COLLECTIONS} from '../../../../constants/firestore';
 import firestore from '@react-native-firebase/firestore';
-import TasksItem from './TasksItem';
 import {APP_ROUTES} from '../../../../constants/routes';
 import {useUserProvider} from '../../../../providers/UserProvider';
+import TasksTeacherItem from './TasksTeacherItem';
 
-const TasksScreen = props => {
+const TasksTeacherScreen = props => {
   const {userData} = useUserProvider();
 
   const [data, setData] = useState({
@@ -25,16 +25,17 @@ const TasksScreen = props => {
   const getCollection = async () => {
     setData(prev => ({...prev, loading: true}));
     await firestore()
-      .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
+      .collection(FIRESTORE_COLLECTIONS.TEACHER_TASKS)
       .get()
       .then(response => {
-        console.log(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS, response.docs);
+        console.log(FIRESTORE_COLLECTIONS.TEACHER_TASKS, response.docs);
         const data =
-          userData.role === 2
+          userData.role === 1
             ? response._docs.filter(item => item._data.to === userData.id)
-            : userData.role === 3
+            : userData.role === 3 || userData.role === 2
             ? response._docs
             : [];
+        console.log('response', response);
         setData(prev => ({...prev, collection: data, loading: false}));
       })
       .catch(error => {
@@ -44,24 +45,27 @@ const TasksScreen = props => {
   };
 
   const onPressSupervisorTasksItem = id => {
-    props.navigation.navigate(APP_ROUTES.TASK_DETAILS_SCREEN, {
+    props.navigation.navigate(APP_ROUTES.TASK_TASK_DETAILS_SCREEN, {
       id: id,
+      updateGetCollection: getCollection,
     });
   };
 
   const onPressSupervisorNewTask = id => {
-    props.navigation.navigate(APP_ROUTES.NEW_TASK_SCREEN, {
+    props.navigation.navigate(APP_ROUTES.NEW_TASK_TEACHER_SCREEN, {
       getCollection: getCollection,
     });
   };
 
   const renderReqest = useCallback(item => {
-    const {id, title, description, from, to, date, status} = item?.item?._data;
+    const {id, title, description, from, to, date, status, name} =
+      item?.item?._data;
     return (
-      <TasksItem
+      <TasksTeacherItem
         id={id}
         title={title}
         description={description}
+        name={name}
         from={from}
         to={to}
         date={date}
@@ -75,7 +79,13 @@ const TasksScreen = props => {
 
   return (
     <Viewer>
-      <Header label="Заданий" />
+      <Header
+        label={
+          userData.role === 3 || userData.role === 2
+            ? 'Заданий для учиников'
+            : 'Заданий от учителя'
+        }
+      />
       <Viewer loader={data.loading}>
         <FlatList
           data={data.collection}
@@ -87,14 +97,14 @@ const TasksScreen = props => {
           onRefresh={getCollection}
           refreshing={data.loading}
         />
-        {userData.role === 3 ? (
+        {userData.role === 1 ? null : (
           <TouchableOpacity
             style={styles.plusIcon}
             onPress={onPressSupervisorNewTask}
             activeOpacity={0.8}>
             <PlusIcon />
           </TouchableOpacity>
-        ) : null}
+        )}
       </Viewer>
     </Viewer>
   );
@@ -103,7 +113,6 @@ const TasksScreen = props => {
 const styles = StyleSheet.create({
   flatListView: {
     marginVertical: 10,
-    marginHorizontal: 16,
   },
   plusIcon: {
     backgroundColor: APP_COLORS.PRIMARY,
@@ -118,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TasksScreen;
+export default TasksTeacherScreen;

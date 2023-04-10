@@ -147,7 +147,7 @@ const RequestScreen = props => {
       });
   };
 
-  const renderReqest = useCallback((item, index) => {
+  const renderRequest = useCallback((item) => {
     const {id, full_name, email} = item?.item?._data;
     return (
       <RequestItem
@@ -159,13 +159,13 @@ const RequestScreen = props => {
     );
   }, []);
 
-  const keyExtractor = useCallback((item, index) => item.id.toString(), []);
+  const keyExtractor = useCallback((item) => item.id.toString(), []);
 
   return (
     <Viewer loader={data.loading} style={styles.view}>
       <FlatList
         data={data.collection}
-        renderItem={renderReqest}
+        renderItem={renderRequest}
         keyExtractor={keyExtractor}
         maxToRenderPerBatch={10}
         initialNumToRender={10}

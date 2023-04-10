@@ -11,8 +11,11 @@ import {getStorageObject} from '../utils/AsyncStorage';
 import {APP_KEYS} from '../constants/keys';
 import Viewer from '../components/views/Viewer';
 import RequestScreen from '../screens/tabs/bottoms/profile/menu/RequestScreen';
-import TaskDetailsScreen from '../screens/tabs/bottoms/tasks/TaskDetailsScreen';
-import NewTaskScreen from '../screens/tabs/bottoms/tasks/NewTaskScreen';
+import TaskDetailsScreen from '../screens/tabs/bottoms/taskSupervisor/TaskDetailsScreen';
+import NewTaskScreen from '../screens/tabs/bottoms/taskSupervisor/NewTaskScreen';
+import NewAudienceScreen from '../screens/tabs/bottoms/audience/NewAudienceScreen';
+import NewTaskTeacherScreen from '../screens/tabs/bottoms/taskTeacher/NewTaskTeacherScreen';
+import TaskTeacherDetailsScreen from '../screens/tabs/bottoms/taskTeacher/TaskTeacherDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +31,7 @@ const RootNavigation = () => {
     setLoading(true);
     const user = await getStorageObject(APP_KEYS.USER_DATA);
     if (user) {
+      console.log('user', user);
       setUserData(user);
     }
     setLoading(false);
@@ -61,6 +65,18 @@ const RootNavigation = () => {
     {
       name: APP_ROUTES.NEW_TASK_SCREEN,
       component: NewTaskScreen,
+    },
+    {
+      name: APP_ROUTES.NEW_AUDIENCE_SCREEN,
+      component: NewAudienceScreen,
+    },
+    {
+      name: APP_ROUTES.NEW_TASK_TEACHER_SCREEN,
+      component: NewTaskTeacherScreen,
+    },
+    {
+      name: APP_ROUTES.TASK_TASK_DETAILS_SCREEN,
+      component: TaskTeacherDetailsScreen,
     },
   ];
 

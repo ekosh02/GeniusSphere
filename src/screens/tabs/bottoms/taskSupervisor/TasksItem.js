@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
   view: {
     backgroundColor: 'white',
     height: 56,
+    marginHorizontal: 16,
     marginVertical: 6,
     borderRadius: 10,
     justifyContent: 'center',
