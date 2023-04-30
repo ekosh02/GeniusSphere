@@ -13,6 +13,7 @@ import {setStorageObject} from '../../../../utils/AsyncStorage';
 import {APP_ROUTES} from '../../../../constants/routes';
 import {setFontStyle} from '../../../../utils/setFontStyle';
 import {ArrowGoIcon} from '../../../../assets/icons';
+import {strings} from '../../../../languages/languages';
 
 const ProfileScreen = props => {
   const {userData, setUserData} = useUserProvider();
@@ -25,9 +26,18 @@ const ProfileScreen = props => {
 
   const menu = [
     {
-      name: 'Заявки',
+      name: strings.Заявки,
       router: APP_ROUTES.REQUEST_SCREEN,
       show: userData.role === 2 || userData.role === 3 ? true : false,
+      params: null,
+    },
+    {
+      name: strings['Поменять язык'],
+      router: APP_ROUTES.LANGUAGE_SCREEN,
+      show:
+        userData.role === 2 || userData.role === 3 || userData.role === 1
+          ? true
+          : false,
       params: null,
     },
   ];
@@ -48,7 +58,7 @@ const ProfileScreen = props => {
       })
       .catch(error => {
         if (error.code === 'auth/no-current-user') {
-          Alert.alert('Ни один пользователь не вошел в систему');
+          Alert.alert(strings['Ни один пользователь не вошел в систему']);
           console.log('error', error.code);
           setData(prev => ({...prev, buttonLoading: false}));
           return;
@@ -70,7 +80,7 @@ const ProfileScreen = props => {
 
   return (
     <Viewer>
-      <Header />
+      <Header label={strings.Профиль} />
       <Viewer scroll bounces loader={data.screenLoading} style={styles.profile}>
         <RowView style={styles.avatarView}>
           <View style={styles.avator} />
@@ -97,12 +107,22 @@ const ProfileScreen = props => {
           ))}
         <TextButton
           style={styles.signOut}
-          label={'Выйти'}
+          label={strings.Выйти}
           size={22}
           loader={data.buttonLoading}
           onPress={onPressSignOut}
         />
       </Viewer>
+      <View
+        style={{
+          position: 'absolute',
+          justifyContent: 'center',
+          alignItems: 'center',
+          bottom: 30,
+          width: WIDTH,
+        }}>
+        <Text>{strings['Создано Yeldos Turapbayev']}</Text>
+      </View>
     </Viewer>
   );
 };

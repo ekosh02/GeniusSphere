@@ -20,11 +20,11 @@ import TextButton from '../../../../../components/buttons/TextButton';
 import RowView from '../../../../../components/views/RowView';
 import Input from '../../../../../components/inputs/Input';
 import auth from '@react-native-firebase/auth';
-import { useUserProvider } from '../../../../../providers/UserProvider';
+import {useUserProvider} from '../../../../../providers/UserProvider';
+import {strings} from '../../../../../languages/languages';
 
 const RequestScreen = props => {
   const {userData} = useUserProvider();
-
 
   const [data, setData] = useState({
     collection: {},
@@ -89,7 +89,9 @@ const RequestScreen = props => {
       data.password?.length < 5
     ) {
       Alert.alert(
-        'Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку',
+        strings[
+          'Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку'
+        ],
       );
       setData(prev => ({...prev, buttonLoading: false}));
       return;
@@ -128,26 +130,28 @@ const RequestScreen = props => {
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
           console.log('That email address is already in use!');
-          Alert.alert('Этот адрес электронной почты уже используется!');
+          Alert.alert(
+            strings['Этот адрес электронной почты уже используется!'],
+          );
           setData(prev => ({...prev, buttonLoading: false}));
           return;
         }
 
         if (error.code === 'auth/invalid-email') {
           console.log('That email address is invalid!');
-          Alert.alert('Этот адрес электронной почты недействителен!');
+          Alert.alert(strings['Этот адрес электронной почты недействителен!']);
           setData(prev => ({...prev, buttonLoading: false}));
 
           return;
         }
         console.log(error);
-        Alert.alert('Произошла неизвестная ошибка');
+        Alert.alert(strings['Произошла неизвестная ошибка']);
         setData(prev => ({...prev, buttonLoading: false}));
         return;
       });
   };
 
-  const renderRequest = useCallback((item) => {
+  const renderRequest = useCallback(item => {
     const {id, full_name, email} = item?.item?._data;
     return (
       <RequestItem
@@ -159,7 +163,7 @@ const RequestScreen = props => {
     );
   }, []);
 
-  const keyExtractor = useCallback((item) => item.id.toString(), []);
+  const keyExtractor = useCallback(item => item.id.toString(), []);
 
   return (
     <Viewer loader={data.loading} style={styles.view}>
@@ -180,12 +184,12 @@ const RequestScreen = props => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View style={styles.modalTopView}>
-              <Text>{'Создать пользователя'}</Text>
-              <Text>{`Полное имя ${data.modalData.full_name}`}</Text>
+              <Text>{strings['Создать пользователя']}</Text>
+              <Text>{`${strings['Полное имя']} ${data.modalData.full_name}`}</Text>
               <Text>{`Электронная почта ${data.modalData.email}`}</Text>
               <Input
                 secureTextEntry
-                placeholder="Создайте пользователю пароль"
+                placeholder={strings['Создайте пользователю пароль']}
                 style={styles.input}
                 getValue={value =>
                   setData(prev => ({...prev, password: value}))
@@ -196,12 +200,12 @@ const RequestScreen = props => {
                   onPress={() => onPressCreateUser()}
                   style={styles.modalButton}
                   loader={data.buttonLoading}
-                  label={'Создать'}
+                  label={strings.Создать}
                 />
                 <TextButton
                   onPress={() => setData(prev => ({...prev, modal: false}))}
                   style={styles.modalButton}
-                  label={'Отмена'}
+                  label={strings.Отмена}
                   size={20}
                 />
               </RowView>

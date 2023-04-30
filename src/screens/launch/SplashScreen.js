@@ -9,13 +9,13 @@ const SplashScreen = props => {
   const {userData} = useUserProvider();
 
   useEffect(() => {
-    setTimeout(() => {
+    // setTimeout(() => {
       if (Object.getOwnPropertyNames(userData).length === 0) {
         props.navigation.replace(APP_ROUTES.SIGN_IN_SCREEN);
       } else {
         props.navigation.replace(APP_ROUTES.BOTTOM_TAB);
       }
-    }, 1500);
+    // }, 1500);
   }, []);
 
   return <Viewer style={styles.view}></Viewer>;

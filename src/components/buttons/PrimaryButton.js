@@ -3,9 +3,10 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {setFontStyle} from '../../utils/setFontStyle';
 import {APP_COLORS} from '../../constants/colors';
 import Loader from '../indicators/Loader';
+import { strings } from '../../languages/languages';
 
 const PrimaryButton = ({
-  label = 'Нажать',
+  label = strings.Нажать,
   style = {},
   labelStyle = {},
   loader = false,

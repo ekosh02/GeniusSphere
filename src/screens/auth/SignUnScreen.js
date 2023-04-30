@@ -11,6 +11,7 @@ import {setStorageObject} from '../../utils/AsyncStorage';
 import {APP_KEYS} from '../../constants/keys';
 import {useUserProvider} from '../../providers/UserProvider';
 import {FIRESTORE_COLLECTIONS, FIRESTORE_ID} from '../../constants/firestore';
+import {strings} from '../../languages/languages';
 
 const SignUnScreen = props => {
   const {setUserData} = useUserProvider();
@@ -88,13 +89,13 @@ const SignUnScreen = props => {
     const {full_name, email, password, repeat_password} = dataSourse.current;
 
     if (!full_name) {
-      Alert.alert('Поле имени не должно содержать пустую строку');
+      Alert.alert(strings['Поле имени не должно содержать пустую строку']);
       setData(prev => ({...prev, buttonLoading: false}));
       return;
     }
     if (email?.includes(' ') || email == undefined || email?.length < 6) {
       Alert.alert(
-        'Поле электронной почты не может содержать менее 5 символов или содержать пустую строку',
+        strings['Поле электронной почты не может содержать менее 5 символов или содержать пустую строку'],
       );
       setData(prev => ({...prev, buttonLoading: false}));
       return;
@@ -106,7 +107,7 @@ const SignUnScreen = props => {
         password?.length < 5
       ) {
         Alert.alert(
-          'Поле пароль не может быть меньше 5 символов или содержать пустую строку',
+          strings['Поле пароль не может быть меньше 5 символов или содержать пустую строку'],
         );
         setData(prev => ({
           ...prev,
@@ -120,7 +121,7 @@ const SignUnScreen = props => {
         repeat_password?.length < 5
       ) {
         Alert.alert(
-          'Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку',
+          strings['Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку'],
         );
         setData(prev => ({
           ...prev,
@@ -129,7 +130,7 @@ const SignUnScreen = props => {
         return;
       }
       if (password != repeat_password) {
-        Alert.alert('Пароли не подходят');
+        Alert.alert(strings['Пароли не подходят']);
         setData(prev => ({
           ...prev,
           buttonLoading: false,
@@ -241,7 +242,7 @@ const SignUnScreen = props => {
       })
       .catch(error => {
         console.log(error);
-        Alert.alert('Произошла неизвестная ошибка');
+        Alert.alert(strings['Произошла неизвестная ошибка']);
         setData(prev => ({
           ...prev,
           buttonLoading: false,
@@ -252,10 +253,13 @@ const SignUnScreen = props => {
 
   return (
     <Viewer>
-      <Header routes={APP_ROUTES.SIGN_IN_SCREEN} />
+      <Header
+        routes={APP_ROUTES.SIGN_IN_SCREEN}
+        label={strings.Зарегистрироваться}
+      />
       <Viewer loader={data.keyLoading} scroll bounces>
         <Input
-          placeholder="Ключ"
+          placeholder={strings['Ключ']}
           style={styles.marginTop}
           secureTextEntry
           getValue={value =>
@@ -268,22 +272,22 @@ const SignUnScreen = props => {
         {data.roleId !== 0 ? (
           <Viewer>
             <Input
-              placeholder="Полное имя"
+              placeholder={strings['Полное имя']}
               getValue={value => (dataSourse.current.full_name = value)}
             />
             <Input
-              placeholder="Электронная почта"
+              placeholder={strings['Электронная почта']}
               getValue={value => (dataSourse.current.email = value)}
             />
             {data.roleId === 1 || data.roleId === 2 ? null : (
               <View>
                 <Input
-                  placeholder="Пароль"
+                  placeholder={strings['Пароль']}
                   getValue={value => (dataSourse.current.password = value)}
                   secureTextEntry
                 />
                 <Input
-                  placeholder="Повторите пароль"
+                  placeholder={strings['Повторите пароль']}
                   getValue={value =>
                     (dataSourse.current.repeat_password = value)
                   }
@@ -294,10 +298,10 @@ const SignUnScreen = props => {
             <PrimaryButton
               label={
                 data.roleId === 3
-                  ? 'Зарегистрироваться'
+                  ? strings['Зарегистрироваться']
                   : data.roleId === 2 || data.roleId === 1
-                  ? 'Отправить запрос'
-                  : 'Ошибка'
+                  ? strings['Отправить запрос']
+                  : strings['Ошибка']
               }
               onPress={onPressSignUp}
               style={styles.marginTop}

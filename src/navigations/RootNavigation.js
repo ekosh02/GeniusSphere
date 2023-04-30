@@ -7,7 +7,7 @@ import SignInScreen from '../screens/auth/SignInScreen';
 import SignUnScreen from '../screens/auth/SignUnScreen';
 import BottomNavigation from './BottomNavigation';
 import {useUserProvider} from '../providers/UserProvider';
-import {getStorageObject} from '../utils/AsyncStorage';
+import {getStorage, getStorageObject} from '../utils/AsyncStorage';
 import {APP_KEYS} from '../constants/keys';
 import Viewer from '../components/views/Viewer';
 import RequestScreen from '../screens/tabs/bottoms/profile/menu/RequestScreen';
@@ -16,12 +16,16 @@ import NewTaskScreen from '../screens/tabs/bottoms/taskSupervisor/NewTaskScreen'
 import NewAudienceScreen from '../screens/tabs/bottoms/audience/NewAudienceScreen';
 import NewTaskTeacherScreen from '../screens/tabs/bottoms/taskTeacher/NewTaskTeacherScreen';
 import TaskTeacherDetailsScreen from '../screens/tabs/bottoms/taskTeacher/TaskTeacherDetailsScreen';
+import LanguageScreen from '../screens/tabs/bottoms/profile/menu/LanguageScreen';
+import {useLangProvider} from '../providers/LangProvider';
+import {strings} from '../languages/languages';
 
 const Stack = createNativeStackNavigator();
 
 const RootNavigation = () => {
   const [loading, setLoading] = useState(false);
   const {userData, setUserData} = useUserProvider();
+  const {langData, setLangData} = useLangProvider();
 
   useEffect(() => {
     getData();
@@ -30,10 +34,20 @@ const RootNavigation = () => {
   const getData = async () => {
     setLoading(true);
     const user = await getStorageObject(APP_KEYS.USER_DATA);
+    const lang = await getStorage(APP_KEYS.LANG);
     if (user) {
       console.log('user', user);
       setUserData(user);
     }
+    console.log('lang', lang);
+    if (lang) {
+      setLangData(lang);
+      strings.setLanguage(lang);
+    } else {
+      setLangData('kz');
+      strings.setLanguage('kz');
+    }
+
     setLoading(false);
   };
 
@@ -77,6 +91,10 @@ const RootNavigation = () => {
     {
       name: APP_ROUTES.TASK_TASK_DETAILS_SCREEN,
       component: TaskTeacherDetailsScreen,
+    },
+    {
+      name: APP_ROUTES.LANGUAGE_SCREEN,
+      component: LanguageScreen,
     },
   ];
 

@@ -17,6 +17,7 @@ import {setFontStyle} from '../../../../utils/setFontStyle';
 import {APP_COLORS} from '../../../../constants/colors';
 import {WIDTH} from '../../../../constants/screenDimensions';
 import PrimaryButton from '../../../../components/buttons/PrimaryButton';
+import { strings } from '../../../../languages/languages';
 
 const NewTaskScreen = props => {
   const {getCollection} = props?.route?.params;
@@ -32,7 +33,7 @@ const NewTaskScreen = props => {
   });
 
   useLayoutEffect(() => {
-    navHeader(props.navigation, 'Новое задание');
+    navHeader(props.navigation, strings['Новое задание']);
   }, []);
 
   console.log();
@@ -78,15 +79,15 @@ const NewTaskScreen = props => {
   const onPressAddTask = () => {
     setDataSource(prev => ({...prev, buttonLoading: true}));
     if (dataSource.title === '') {
-      Alert.alert('Поле Тема не должно быть пустым');
+      Alert.alert(strings['Поле Тема не должно быть пустым']);
       setDataSource(prev => ({...prev, buttonLoading: false}));
       return;
     } else if (dataSource.description === '') {
-      Alert.alert('Поле Описание не должно быть пустым');
+      Alert.alert(strings['Поле Описание не должно быть пустым']);
       setDataSource(prev => ({...prev, buttonLoading: false}));
       return;
     } else if (dataSource.id === '') {
-      Alert.alert('Выбирите кому хотите отправит задачу');
+      Alert.alert(strings['Выбирите кому хотите отправит задачу']);
       setDataSource(prev => ({...prev, buttonLoading: false}));
       return;
     }
@@ -106,7 +107,7 @@ const NewTaskScreen = props => {
       .set(data)
       .then(() => {
         setDataSource(prev => ({...prev, buttonLoading: false}));
-        Alert.alert('Задача успешно отправлено!');
+        Alert.alert(strings['Задача успешно отправлено!']);
         getCollection();
         props.navigation.goBack();
       })
@@ -119,18 +120,18 @@ const NewTaskScreen = props => {
   return (
     <Viewer style={styles.paddingVertical} loader={dataSource.loading}>
       <Input
-        placeholder="Тема"
+        placeholder={strings.Тема}
         getValue={value => setDataSource(prev => ({...prev, title: value}))}
       />
       <Input
-        placeholder="Описание"
+        placeholder={strings.Описание}
         multiline
         getValue={value =>
           setDataSource(prev => ({...prev, description: value}))
         }
       />
       <TouchableOpacity style={styles.button} onPress={onPressModalFalse}>
-        <Text style={styles.buttonText}>Кому: {dataSource?.full_name}</Text>
+        <Text style={styles.buttonText}>{strings['Кому: ']}{dataSource?.full_name}</Text>
         {dataSource.modal ? <ArrowUpIcon /> : <ArrowDownIcon />}
       </TouchableOpacity>
       <PrimaryButton

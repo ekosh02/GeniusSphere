@@ -12,6 +12,7 @@ import TextButton from '../../components/buttons/TextButton';
 import {useUserProvider} from '../../providers/UserProvider';
 import firestore from '@react-native-firebase/firestore';
 import {FIRESTORE_COLLECTIONS} from '../../constants/firestore';
+import { strings } from '../../languages/languages';
 
 const SignInScreen = props => {
   const {setUserData} = useUserProvider();
@@ -29,7 +30,7 @@ const SignInScreen = props => {
     const password = data?.current?.password;
     if (email?.includes(' ') || email == undefined || email?.length < 6) {
       Alert.alert(
-        'Поле электронной почты не может содержать менее 5 символов или содержать пустую строку',
+        strings['Поле электронной почты не может содержать менее 5 символов или содержать пустую строку'],
       );
       setLoading(false);
       return;
@@ -40,7 +41,7 @@ const SignInScreen = props => {
       password?.length < 5
     ) {
       Alert.alert(
-        'Поле пароля не может быть меньше 5 символов или содержать пустую строку',
+        strings['Поле пароля не может быть меньше 5 символов или содержать пустую строку'],
       );
       setLoading(false);
       return;
@@ -73,13 +74,13 @@ const SignInScreen = props => {
           console.log(
             'The password is invalid or the user does not have a password!',
           );
-          Alert.alert('Пароль недействителен или у пользователя нет пароля!');
+          Alert.alert(strings['Пароль недействителен или у пользователя нет пароля!']);
           setLoading(false);
           return;
         }
         if (error?.code === 'auth/invalid-email') {
           console.log('The email address is badly formatted!');
-          Alert.alert('Адрес электронной почты имеет неправильный формат!');
+          Alert.alert(strings['Адрес электронной почты имеет неправильный формат!']);
           setLoading(false);
           return;
         }
@@ -88,13 +89,13 @@ const SignInScreen = props => {
             'There is no user record corresponding to this identifier. The user may have been deleted.',
           );
           Alert.alert(
-            'Нет записи пользователя, соответствующей этому идентификатору. Возможно, пользователь был удален',
+            strings['Нет записи пользователя, соответствующей этому идентификатору. Возможно, пользователь был удален'],
           );
           setLoading(false);
           return;
         }
         console.log(error);
-        Alert.alert('Произошла неизвестная ошибка');
+        Alert.alert(strings['Произошла неизвестная ошибка']);
         setLoading(false);
         return;
       });
@@ -105,22 +106,22 @@ const SignInScreen = props => {
   };
   return (
     <Viewer>
-      <Header label="Авторизация" />
+      <Header label={strings["Авторизация"]} />
       <Viewer scroll bounces>
         <Input
-          placeholder="Электронная почта"
+          placeholder={strings["Электронная почта"]}
           style={styles.topInput}
           getValue={value => (data.current.email = value)}
         />
         <Input
-          placeholder="Пароль"
+          placeholder={strings["Пароль"]}
           style={styles.bottomInput}
           secureTextEntry
           getValue={value => (data.current.password = value)}
         />
-        <PrimaryButton label="Войти" onPress={OnPressSignIn} loader={loading} />
+        <PrimaryButton label={strings["Войти"]} onPress={OnPressSignIn} loader={loading} />
         <TextButton
-          label="У меня нет аккунта"
+          label={strings["У меня нет аккунта"]}
           size={16}
           style={styles.textButton}
           onPress={onPressSignUp}

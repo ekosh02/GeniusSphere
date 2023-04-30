@@ -12,6 +12,7 @@ import {setFontStyle} from '../../../../utils/setFontStyle';
 import {checkTaskColor} from '../../../../utils/checkTaskColor';
 import {useUserProvider} from '../../../../providers/UserProvider';
 import RowView from '../../../../components/views/RowView';
+import { strings } from '../../../../languages/languages';
 
 const TaskDetailsScreen = props => {
   const {id, updateGetCollection} = props?.route?.params;
@@ -28,7 +29,7 @@ const TaskDetailsScreen = props => {
   }, []);
 
   useLayoutEffect(() => {
-    navHeader(props.navigation, 'Задания');
+    navHeader(props.navigation, strings.Задания);
   }, []);
 
   const getCollection = async () => {
@@ -88,15 +89,15 @@ const TaskDetailsScreen = props => {
     <Viewer loader={dataSource.loading} scroll bounces>
       <View style={styles.view}>
         <Text style={styles.text}>
-          {'Тема: '}
+          {strings['Тема: ']}
           {title}
         </Text>
         <Text style={styles.text}>
-          {'Описание: '}
+          {strings['Описание: ']}
           {description}
         </Text>
         <RowView>
-          <Text style={styles.text}>{'Статус:   '}</Text>
+          <Text style={styles.text}>{strings['Статус:   ']}</Text>
           <TouchableOpacity
             onPress={onPressModalVisible}
             style={[

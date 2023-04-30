@@ -17,6 +17,8 @@ import {APP_COLORS} from '../../../../constants/colors';
 import {WIDTH} from '../../../../constants/screenDimensions';
 import PrimaryButton from '../../../../components/buttons/PrimaryButton';
 import Header from '../../../../components/bars/Header';
+import {strings} from '../../../../languages/languages';
+import {setFontStyle} from '../../../../utils/setFontStyle';
 
 const NewAudienceScreen = props => {
   const [dataSource, setDataSource] = useState({
@@ -26,11 +28,34 @@ const NewAudienceScreen = props => {
     timeActive: '',
     booking: [],
     subject: '',
+    members: [],
+    selectedMembers: [],
+    choosedMembers: [],
   });
 
   useEffect(() => {
     getCollection();
+    getMember();
   }, []);
+
+  const getMember = async () => {
+    await firestore()
+      .collection(FIRESTORE_COLLECTIONS.USERS)
+      .get()
+      .then(response => {
+        const members = response._docs.filter(item => {
+          return item._data.role === 1;
+        });
+        console.log('FIRESTORE_COLLECTIONS.USERS', members);
+        setDataSource(prev => ({
+          ...prev,
+          members: members,
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const getCollection = async () => {
     setDataSource(prev => ({...prev, loading: true}));
@@ -73,7 +98,12 @@ const NewAudienceScreen = props => {
             setDataSource(prev => ({...prev, loading: false}));
             return;
           }
-          array[index] = {...array[index], busy: false, subject: ''};
+          array[index] = {
+            ...array[index],
+            busy: false,
+            subject: '',
+            members: [],
+          };
         } else if (conditional === 'add') {
           if (array[index].busy === true) {
             setDataSource(prev => ({...prev, loading: false}));
@@ -83,6 +113,7 @@ const NewAudienceScreen = props => {
             ...array[index],
             busy: true,
             subject: dataSource.subject,
+            members: dataSource.selectedMembers,
           };
         } else {
           setDataSource(prev => ({...prev, loading: false}));
@@ -139,13 +170,36 @@ const NewAudienceScreen = props => {
     setDataSource(prev => ({...prev, audienceActive: '', timeActive: ''}));
   };
 
+  const onPressChooseMember = (email, full_name, role, id) => {
+    const existingMember = dataSource.selectedMembers.find(
+      member => member.id === id,
+    );
+    if (existingMember) {
+      setDataSource(prev => ({
+        ...prev,
+        selectedMembers: prev.selectedMembers.filter(
+          member => member.id !== id,
+        ),
+      }));
+    } else {
+      setDataSource(prev => ({
+        ...prev,
+        selectedMembers: [
+          ...prev.selectedMembers,
+          {email, full_name, role, id},
+        ],
+      }));
+    }
+  };
+
   const keyExtractor = useCallback(index => {
     return index.toString();
   }, []);
 
   const renderTime = useCallback(
     (item, index, id) => {
-      const {busy, subject, time} = item;
+      const {busy, subject, time, members} = item;
+
       return (
         <RenderTime
           index={index}
@@ -155,6 +209,7 @@ const NewAudienceScreen = props => {
           id={id}
           timeActive={dataSource.timeActive}
           audienceActive={dataSource.audienceActive}
+          members={members}
           onPress={onPressRenderTime}
         />
       );
@@ -164,15 +219,14 @@ const NewAudienceScreen = props => {
 
   return (
     <Viewer loader={dataSource.loading}>
-      <Header label="Аудитория" />
+      <Header label={strings.Аудитория} />
       <Input
-        placeholder="Предмет"
+        placeholder={strings.Предмет}
         style={styles.view}
-        getValue={value => setDataSource(prev => ({...prev, subject: value}))
-      }
+        getValue={value => setDataSource(prev => ({...prev, subject: value}))}
       />
 
-      <Text style={styles.title}>Аудитория</Text>
+      <Text style={styles.title}>{strings.Аудитория}</Text>
 
       {dataSource.collection.map(data => {
         const {number, id, booking} = data?._data;
@@ -202,13 +256,37 @@ const NewAudienceScreen = props => {
           </View>
         );
       })}
+      <Text style={styles.title}>{strings.Ученики}</Text>
+      {dataSource.members.map((member, index) => {
+        const {email, full_name, role, id} = member._data;
+        const isSelected = dataSource.selectedMembers.some(
+          member => member.id === id,
+        );
 
+        return (
+          <TouchableOpacity
+            key={id}
+            onPress={() => onPressChooseMember(email, full_name, role, id)}
+            style={{
+              width: WIDTH / 3,
+              paddingHorizontal: 8,
+              paddingVertical: 8,
+              borderWidth: 1,
+              marginHorizontal: 16,
+              marginVertical: 8,
+              borderRadius: 10,
+              borderColor: isSelected ? APP_COLORS.PRIMARY : APP_COLORS.BORDER,
+            }}>
+            <Text>{full_name}</Text>
+          </TouchableOpacity>
+        );
+      })}
       {dataSource.subject &&
       dataSource.audienceActive &&
       dataSource.timeActive ? (
         <PrimaryButton
           style={styles.button}
-          label="Создать"
+          label={strings.Создать}
           onPress={() => getBooking(dataSource.timeActive, 'add')}
         />
       ) : null}
@@ -224,6 +302,7 @@ const RenderTime = ({
   id,
   timeActive,
   audienceActive,
+  members,
   onPress = () => undefined,
 }) => {
   const color = () => {
@@ -231,7 +310,7 @@ const RenderTime = ({
       return 'red';
     }
     if (timeActive === time) {
-      return APP_COLORS.PRIMARY;
+      return 'blue';
     } else {
       return APP_COLORS.BORDER;
     }
@@ -249,6 +328,11 @@ const RenderTime = ({
       onPress={() => onPress(busy, subject, time, index)}>
       <Text>{time}</Text>
       <Text numberOfLines={1}>{subject}</Text>
+      {members ? (
+        <Text numberOfLines={1}>{members.length}</Text>
+      ) : (
+        <Text numberOfLines={1}>{0}</Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -295,3 +379,6 @@ const styles = StyleSheet.create({
 });
 
 export default NewAudienceScreen;
+
+
+//Оқушыларға жаңа аудитория ашу сағат 12:00 де

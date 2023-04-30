@@ -5,6 +5,7 @@ import Header from '../../../../components/bars/Header';
 import Viewer from '../../../../components/views/Viewer';
 import {APP_COLORS} from '../../../../constants/colors';
 import {APP_ROUTES} from '../../../../constants/routes';
+import { strings } from '../../../../languages/languages';
 
 const AudienceScreen = props => {
   const onPressSupervisorNewAudience = () => {
@@ -14,7 +15,7 @@ const AudienceScreen = props => {
   };
   return (
     <Viewer>
-      <Header label="Аудитория" />
+      <Header label={strings.Аудитория} />
       <TouchableOpacity
         style={styles.plusIcon}
         onPress={onPressSupervisorNewAudience}

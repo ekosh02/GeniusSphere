@@ -9,6 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import TasksItem from './TasksItem';
 import {APP_ROUTES} from '../../../../constants/routes';
 import {useUserProvider} from '../../../../providers/UserProvider';
+import { strings } from '../../../../languages/languages';
 
 const TasksScreen = props => {
   const {userData} = useUserProvider();
@@ -78,7 +79,7 @@ const TasksScreen = props => {
     <Viewer>
       <Header
         label={
-          userData.role === 3 ? 'Заданий для учетелей' : 'Заданий от админа'
+          userData.role === 3 ? strings['Заданий для учетелей'] : strings['Заданий от админа']
         }
       />
       <Viewer loader={data.loading}>

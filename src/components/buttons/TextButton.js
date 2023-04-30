@@ -4,7 +4,7 @@ import {setFontStyle} from '../../utils/setFontStyle';
 import {APP_COLORS} from '../../constants/colors';
 
 const TextButton = ({
-  label = 'Text Button',
+  label = strings.Нажать,
   style = {},
   size = 16,
   widght = '500',

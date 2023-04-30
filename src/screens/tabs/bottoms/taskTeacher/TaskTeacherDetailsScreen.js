@@ -22,6 +22,7 @@ import {checkTaskColor} from '../../../../utils/checkTaskColor';
 import {useUserProvider} from '../../../../providers/UserProvider';
 import RowView from '../../../../components/views/RowView';
 import Input from '../../../../components/inputs/Input';
+import {strings} from '../../../../languages/languages';
 
 const TaskTeacherDetailsScreen = props => {
   const {id, updateGetCollection} = props?.route?.params;
@@ -103,7 +104,7 @@ const TaskTeacherDetailsScreen = props => {
 
   const onPressSend = () => {
     if (dataSource.comment === '') {
-      Alert.alert('Введите поле');
+      Alert.alert(strings['Введите поле']);
       return;
     }
 
@@ -132,7 +133,7 @@ const TaskTeacherDetailsScreen = props => {
         getCollection();
       })
       .catch(e => {
-        Alert.alert('Не известная ошибка');
+        Alert.alert(strings['Произошла неизвестная ошибка']);
         console.log(e);
         return;
       });
@@ -162,16 +163,16 @@ const TaskTeacherDetailsScreen = props => {
       <Viewer bounces>
         <View style={styles.view}>
           <Text style={styles.text}>
-            {'Тема: '}
+            {strings['Тема: ']}
             {title}
           </Text>
           <Text style={styles.text}>
-            {'Описание: '}
+            {strings['Описание: ']}
             {description}
           </Text>
           {userData.role === 1 ? null : (
             <Text style={styles.text}>
-              {'Кому: '}
+               {strings['Кому: ']}
               {name}
             </Text>
           )}
@@ -187,7 +188,7 @@ const TaskTeacherDetailsScreen = props => {
             </TouchableOpacity>
           </RowView>
         </View>
-        <Text style={styles.commentTitle}>Комментарий</Text>
+        <Text style={styles.commentTitle}>{strings.Комментарий}</Text>
         <FlatList
           data={dataSource?.collection?.comments}
           renderItem={renderItem}
@@ -199,7 +200,7 @@ const TaskTeacherDetailsScreen = props => {
         getValue={value => setDataSource(prev => ({...prev, comment: value}))}
       />
       <TouchableOpacity onPress={onPressSend}>
-        <Text style={styles.sendPosition}>Send</Text>
+        <Text style={styles.sendPosition}>{strings.отправить}</Text>
       </TouchableOpacity>
       <Modal animationType="fade" transparent={true} visible={dataSource.modal}>
         <View style={styles.centeredView}>
@@ -244,7 +245,8 @@ const RenderCommentItem = ({name, idUser, comment, currentId}) => {
           {textAlign: idUser === currentId ? 'right' : 'left'},
         ]}>
         {name}
-        {': '}{comment}
+        {': '}
+        {comment}
       </Text>
       <View style={styles.line} />
     </View>
