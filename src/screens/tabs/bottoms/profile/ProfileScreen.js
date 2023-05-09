@@ -28,16 +28,13 @@ const ProfileScreen = props => {
     {
       name: strings.Заявки,
       router: APP_ROUTES.REQUEST_SCREEN,
-      show: userData.role === 2 || userData.role === 3 ? true : false,
+      show: userData.role === 2 || userData.role === 3 || userData.role === 4 ? true : false,
       params: null,
     },
     {
       name: strings['Поменять язык'],
       router: APP_ROUTES.LANGUAGE_SCREEN,
-      show:
-        userData.role === 2 || userData.role === 3 || userData.role === 1
-          ? true
-          : false,
+      show: true,
       params: null,
     },
   ];

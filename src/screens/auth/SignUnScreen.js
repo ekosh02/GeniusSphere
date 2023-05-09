@@ -47,6 +47,11 @@ const SignUnScreen = props => {
         ...prev,
         roleId: 1,
       }));
+    } else if (data?.collection_key?.cheir_key === data.inputKey) {
+      setData(prev => ({
+        ...prev,
+        roleId: 4,
+      }));
     } else {
       setData(prev => ({
         ...prev,
@@ -95,19 +100,23 @@ const SignUnScreen = props => {
     }
     if (email?.includes(' ') || email == undefined || email?.length < 6) {
       Alert.alert(
-        strings['Поле электронной почты не может содержать менее 5 символов или содержать пустую строку'],
+        strings[
+          'Поле электронной почты не может содержать менее 5 символов или содержать пустую строку'
+        ],
       );
       setData(prev => ({...prev, buttonLoading: false}));
       return;
     }
-    if (data.roleId === 3) {
+    if (data.roleId === 3 || data.roleId === 4) {
       if (
         password?.includes(' ') ||
         password == undefined ||
         password?.length < 5
       ) {
         Alert.alert(
-          strings['Поле пароль не может быть меньше 5 символов или содержать пустую строку'],
+          strings[
+            'Поле пароль не может быть меньше 5 символов или содержать пустую строку'
+          ],
         );
         setData(prev => ({
           ...prev,
@@ -121,7 +130,9 @@ const SignUnScreen = props => {
         repeat_password?.length < 5
       ) {
         Alert.alert(
-          strings['Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку'],
+          strings[
+            'Поле повторите пароль не может быть меньше 5 символов или содержать пустую строку'
+          ],
         );
         setData(prev => ({
           ...prev,
@@ -215,6 +226,8 @@ const SignUnScreen = props => {
     const api =
       roleId === 2
         ? FIRESTORE_COLLECTIONS.TEACHER_REQUEST
+        : roleId === 4
+        ? FIRESTORE_COLLECTIONS.CHEIR_REQUEST
         : FIRESTORE_COLLECTIONS.STUDENT_REQUEST;
 
     const collection = firestore().collection(api);
@@ -233,7 +246,9 @@ const SignUnScreen = props => {
       .then(response => {
         console.log('response', response);
         Alert.alert(
-          `Ваш запрос отправлен ${roleId === 2 ? `Руководителю` : `Учетелю`}`,
+          `Ваш запрос отправлен ${
+            roleId === 2 || roleId === 4 ? `Руководителю` : `Учетелю`
+          }`,
         );
         setData(prev => ({
           ...prev,
@@ -297,7 +312,7 @@ const SignUnScreen = props => {
             )}
             <PrimaryButton
               label={
-                data.roleId === 3
+                data.roleId === 3 || data.roleId === 4
                   ? strings['Зарегистрироваться']
                   : data.roleId === 2 || data.roleId === 1
                   ? strings['Отправить запрос']

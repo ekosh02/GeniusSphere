@@ -3,6 +3,7 @@ export const FIRESTORE_COLLECTIONS = {
   STATUS: 'status',
   STUDENT_REQUEST: 'student_request',
   TEACHER_REQUEST: 'teacher_request',
+  CHEIR_REQUEST: 'cheir_request',
   SUPERVISOR_TASKS: 'supervisor_tasks',
   TEACHER_TASKS: 'teacher_tasks',
   AUDIENCES: 'audiences'

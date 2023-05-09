@@ -51,7 +51,7 @@ const RequestScreen = props => {
     }));
     await firestore()
       .collection(
-        userData.role === 3
+        userData.role === 3 || userData.role === 4
           ? FIRESTORE_COLLECTIONS.TEACHER_REQUEST
           : FIRESTORE_COLLECTIONS.STUDENT_REQUEST,
       )
@@ -106,12 +106,12 @@ const RequestScreen = props => {
             id: response?.user?.uid,
             full_name: data.modalData.full_name,
             email: data.modalData.email,
-            role: userData.role === 3 ? 2 : 1,
+            role: userData.role === 3 || userData.role === 4 ? 2 : 1,
           })
           .then(() => {
             const docRef = firestore()
               .collection(
-                userData.role === 3
+                userData.role === 3 || userData.role === 4
                   ? FIRESTORE_COLLECTIONS.TEACHER_REQUEST
                   : FIRESTORE_COLLECTIONS.STUDENT_REQUEST,
               )
