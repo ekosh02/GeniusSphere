@@ -1,6 +1,13 @@
 import Viewer from '../../../../components/views/Viewer';
 import React, {useLayoutEffect, useEffect, useState} from 'react';
-import {Text, StyleSheet, View, Modal, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  View,
+  Modal,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import {navHeader} from '../../../../components/bars/navHeader';
 import firestore from '@react-native-firebase/firestore';
 import {FIRESTORE_COLLECTIONS} from '../../../../constants/firestore';
@@ -12,7 +19,8 @@ import {setFontStyle} from '../../../../utils/setFontStyle';
 import {checkTaskColor} from '../../../../utils/checkTaskColor';
 import {useUserProvider} from '../../../../providers/UserProvider';
 import RowView from '../../../../components/views/RowView';
-import { strings } from '../../../../languages/languages';
+import {strings} from '../../../../languages/languages';
+import PrimaryButton from '../../../../components/buttons/PrimaryButton';
 
 const TaskDetailsScreen = props => {
   const {id, updateGetCollection} = props?.route?.params;
@@ -61,8 +69,47 @@ const TaskDetailsScreen = props => {
     setDataSource(prev => ({...prev, modal: !prev.modal}));
   };
 
+  const onPressPressSubTask = (index, subtask) => {
+    const docRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
+      .doc(id);
+
+    docRef.get().then(doc => {
+      if (doc.exists) {
+        const subtasks = doc.data().subtasks;
+        subtasks[index].status = !subtasks[index].status;
+        docRef
+          .update({subtasks: subtasks})
+          .then(() => {
+            getCollection();
+          })
+          .catch(error => {
+            console.log('error', error);
+            getCollection();
+          });
+      }
+    });
+  };
+
+  const OnPressDeleteTask = () => {
+    const docRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
+      .doc(id);
+
+    docRef
+      .delete()
+      .then(() => {
+        updateGetCollection();
+        Alert.alert('Документ успешно удален');
+        props.navigation.goBack();
+      })
+      .catch(error => {
+        Alert.alert('Ошибка удаления документа');
+        console.error('Ошибка удаления документа: ', error);
+      });
+  };
+
   const onPressModalStatus = status => {
-    console.log('status', status);
     const docRef = firestore()
       .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
       .doc(id);
@@ -84,6 +131,16 @@ const TaskDetailsScreen = props => {
   };
 
   const {title, description, status} = dataSource.collection;
+
+  const currentDate = new Date();
+
+  const deadlineDate = new Date(Date.parse(dataSource?.collection?.deadline));
+  const timeDiff = deadlineDate.getTime() - currentDate.getTime();
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
 
   return (
     <Viewer loader={dataSource.loading} scroll bounces>
@@ -107,6 +164,10 @@ const TaskDetailsScreen = props => {
             <Text style={styles.title}>{checkTaskStatus(status)}</Text>
           </TouchableOpacity>
         </RowView>
+        <Text style={styles.text}>
+          {'От '}
+          {dataSource.collection.from}
+        </Text>
       </View>
       <Modal animationType="fade" transparent={true} visible={dataSource.modal}>
         <View style={styles.centeredView}>
@@ -137,6 +198,74 @@ const TaskDetailsScreen = props => {
           </View>
         </View>
       </Modal>
+      <View style={{marginHorizontal: 16, marginBottom: 10}}>
+        <Text
+          style={{
+            ...setFontStyle(16, '400', minutes > 0 ? APP_COLORS.FONT : 'red'),
+          }}>
+          {'Deadline до '}
+          {dataSource.collection.deadline}
+        </Text>
+      </View>
+      <View style={{marginHorizontal: 16, marginBottom: 10}}>
+        <Text
+          style={{
+            ...setFontStyle(16, '400', minutes > 0 ? APP_COLORS.FONT : 'red'),
+          }}>
+          {minutes > 0
+            ? `Осталось ${days} дней, ${hours} часов, ${minutes} минут`
+            : `Задача просрочено уже как ${-days} дней, ${-hours} часов, ${-minutes} минут назад`}
+        </Text>
+      </View>
+      {dataSource.collection?.subtasks ? (
+        dataSource.collection?.subtasks.length !== 0 ? (
+          <View style={{marginHorizontal: 16, marginBottom: 10}}>
+            <Text style={{...setFontStyle}}>
+              {'Задания выполнено на '}
+              {Math.round(
+                (dataSource.collection?.subtasks.filter(
+                  subtask => subtask.status === true,
+                ).length *
+                  100) /
+                  dataSource.collection?.subtasks.length,
+              )}
+              {'%'}
+            </Text>
+          </View>
+        ) : null
+      ) : null}
+      {dataSource.collection?.subtasks ? (
+        dataSource.collection?.subtasks.length !== 0 ? (
+          dataSource.collection?.subtasks.map((subtask, index) => {
+            return (
+              <TouchableOpacity
+                style={[
+                  styles.subtaskview,
+                  {
+                    borderColor: subtask.status
+                      ? APP_COLORS.PRIMARY
+                      : APP_COLORS.BORDER,
+                  },
+                ]}
+                activeOpacity={0.8}
+                onPress={() => onPressPressSubTask(index, subtask)}>
+                <Text>{subtask.title}</Text>
+              </TouchableOpacity>
+            );
+          })
+        ) : (
+          <Text style={{...setFontStyle(), marginHorizontal: 16}}>
+            Подзадачи нет
+          </Text>
+        )
+      ) : null}
+      {userData.role === 3 || userData.role === 4 ? (
+        <PrimaryButton
+          label="Удалить задачу"
+          style={{height: 42, marginVertical: 16}}
+          onPress={OnPressDeleteTask}
+        />
+      ) : null}
     </Viewer>
   );
 };
@@ -188,6 +317,13 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 5,
     ...setFontStyle(),
+  },
+  subtaskview: {
+    marginHorizontal: 16,
+    marginVertical: 6,
+    padding: 8,
+    borderRadius: 6,
+    borderWidth: 1,
   },
 });
 

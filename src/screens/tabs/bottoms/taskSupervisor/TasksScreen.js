@@ -33,7 +33,7 @@ const TasksScreen = props => {
         const data =
           userData.role === 2
             ? response._docs.filter(item => item._data.to === userData.id)
-            : userData.role === 3
+            : userData.role === 3 || userData.role === 4
             ? response._docs
             : [];
         setData(prev => ({...prev, collection: data, loading: false}));
@@ -79,7 +79,7 @@ const TasksScreen = props => {
     <Viewer>
       <Header
         label={
-          userData.role === 3 ? strings['Заданий для учетелей'] : strings['Заданий от админа']
+          userData.role === 3 || userData.role === 4 ? strings['Заданий для учетелей'] : strings['Заданий от админа']
         }
       />
       <Viewer loader={data.loading}>
@@ -93,7 +93,7 @@ const TasksScreen = props => {
           onRefresh={getCollection}
           refreshing={data.loading}
         />
-        {userData.role === 3 ? (
+        {userData.role === 3 || userData.role === 4 ? (
           <TouchableOpacity
             style={styles.plusIcon}
             onPress={onPressSupervisorNewTask}

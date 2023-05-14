@@ -15,12 +15,18 @@ import firestore from '@react-native-firebase/firestore';
 import {ArrowDownIcon, ArrowUpIcon, Xicon} from '../../../../assets/icons';
 import {setFontStyle} from '../../../../utils/setFontStyle';
 import {APP_COLORS} from '../../../../constants/colors';
-import {WIDTH} from '../../../../constants/screenDimensions';
+import {HEIGHT, WIDTH} from '../../../../constants/screenDimensions';
 import PrimaryButton from '../../../../components/buttons/PrimaryButton';
-import { strings } from '../../../../languages/languages';
+import {strings} from '../../../../languages/languages';
+import {Calendar} from 'react-native-calendars';
+import TextButton from '../../../../components/buttons/TextButton';
+import { useUserProvider } from '../../../../providers/UserProvider';
 
 const NewTaskScreen = props => {
   const {getCollection} = props?.route?.params;
+
+  const {userData} = useUserProvider();
+
   const [dataSource, setDataSource] = useState({
     collections: [],
     loading: false,
@@ -30,7 +36,13 @@ const NewTaskScreen = props => {
     full_name: '',
     title: '',
     description: '',
+    subtask: [],
+    subtaskModal: false,
+    calerdarModal: false,
+    deadline: 0,
   });
+
+  console.log('subtask', dataSource.deadline);
 
   useLayoutEffect(() => {
     navHeader(props.navigation, strings['Новое задание']);
@@ -67,6 +79,28 @@ const NewTaskScreen = props => {
     setDataSource(prev => ({...prev, modal: !prev.modal}));
   };
 
+  const onPressSubtaskModalModal = () => {
+    setDataSource(prev => ({...prev, subtaskModal: !prev.subtaskModal}));
+  };
+
+  const onPressCalendarModal = () => {
+    setDataSource(prev => ({...prev, calerdarModal: !prev.calerdarModal}));
+  };
+
+  const onPressReset = () => {
+    setDataSource(prev => ({
+      ...prev,
+      id: '',
+      full_name: '',
+      title: '',
+      description: '',
+      subtask: [],
+      subtaskModal: false,
+      calerdarModal: false,
+      deadline: 0,
+    }));
+  };
+
   const onPressChooseUser = (id, full_name) => {
     setDataSource(prev => ({
       ...prev,
@@ -74,6 +108,25 @@ const NewTaskScreen = props => {
       id: id,
       full_name: full_name,
     }));
+  };
+
+  const addSubtask = () => {
+    setDataSource(prev => ({
+      ...prev,
+      subtask: [...prev.subtask, {title: '', status: false}],
+    }));
+  };
+
+  const handleSubtaskTitle = (index, title) => {
+    setDataSource(prev => {
+      const subtask = [...prev.subtask];
+      subtask[index] = {...subtask[index], title};
+      return {...prev, subtask};
+    });
+  };
+
+  const onPressDeadLine = day => {
+    setDataSource(prev => ({...prev, deadline: day.dateString}));
   };
 
   const onPressAddTask = () => {
@@ -100,6 +153,10 @@ const NewTaskScreen = props => {
       description: dataSource?.description,
       to: dataSource?.id,
       status: 0,
+      subtasks: dataSource.subtask,
+      subtask_result: 0,
+      deadline: dataSource.deadline,
+      from: userData.full_name,
     };
     const docRef = collectionRef.doc(); // create a new document reference
     data.id = docRef.id; // add the ID to the data object
@@ -131,12 +188,37 @@ const NewTaskScreen = props => {
         }
       />
       <TouchableOpacity style={styles.button} onPress={onPressModalFalse}>
-        <Text style={styles.buttonText}>{strings['Кому: ']}{dataSource?.full_name}</Text>
+        <Text style={styles.buttonText}>
+          {strings['Кому: ']}
+          {dataSource?.full_name}
+        </Text>
         {dataSource.modal ? <ArrowUpIcon /> : <ArrowDownIcon />}
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onPressSubtaskModalModal}>
+        <Text style={styles.buttonText}>
+          {'Подзадачи'} {dataSource.subtask.length}
+        </Text>
+        {dataSource.subtaskModal ? <ArrowUpIcon /> : <ArrowDownIcon />}
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={onPressCalendarModal}>
+        <Text style={styles.buttonText}>
+          {'Deadline '}
+          {dataSource.deadline !== 0 ? dataSource.deadline : null}
+        </Text>
+        {dataSource.calerdarModal ? <ArrowUpIcon /> : <ArrowDownIcon />}
       </TouchableOpacity>
       <PrimaryButton
         onPress={onPressAddTask}
         loader={dataSource.buttonLoading}
+        style={{height: 42, marginVertical: 10}}
+      />
+      <TextButton
+        onPress={onPressReset}
+        label="Сбосить все"
+        loader={dataSource.buttonLoading}
+        style={{height: 42, marginBottom: 10}}
       />
       <Modal animationType="fade" transparent={true} visible={dataSource.modal}>
         <View style={styles.centeredView}>
@@ -165,6 +247,67 @@ const NewTaskScreen = props => {
                   </TouchableOpacity>
                 );
               })}
+            </Viewer>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={dataSource.subtaskModal}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.xicon}
+              onPress={onPressSubtaskModalModal}>
+              <Xicon />
+            </TouchableOpacity>
+            <Viewer style={styles.modalTopView} scroll bounces>
+              {dataSource.subtask.map((subtask, index) => (
+                <Input
+                  key={index}
+                  placeholder="Введите заголовок подзадачи"
+                  value={subtask.title}
+                  onChangeText={text => handleSubtaskTitle(index, text)}
+                />
+              ))}
+              <PrimaryButton
+                label="Добавить подзадачу"
+                onPress={addSubtask}
+                style={{height: 42, marginVertical: 10}}
+              />
+            </Viewer>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={dataSource.calerdarModal}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <TouchableOpacity
+              style={styles.xicon}
+              onPress={onPressCalendarModal}>
+              <Xicon />
+            </TouchableOpacity>
+            <Viewer style={styles.modalTopView} scroll bounces>
+              <Calendar
+                onDayPress={day => {
+                  onPressDeadLine(day);
+                }}
+                markedDates={{
+                  [dataSource.deadline]: {
+                    selected: true,
+                    marked: true,
+                    selectedColor: APP_COLORS.PRIMARY,
+                  },
+                }}
+                theme={{
+                  arrowColor: APP_COLORS.PRIMARY,
+                  todayTextColor: APP_COLORS.PRIMARY,
+                }}
+              />
             </Viewer>
           </View>
         </View>
@@ -203,6 +346,7 @@ const styles = StyleSheet.create({
     backgroundColor: APP_COLORS.PLACEHOLDER,
   },
   modalView: {
+    maxHeight: HEIGHT / 1.4,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
