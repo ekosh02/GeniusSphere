@@ -19,6 +19,8 @@ import TaskTeacherDetailsScreen from '../screens/tabs/bottoms/taskTeacher/TaskTe
 import LanguageScreen from '../screens/tabs/bottoms/profile/menu/LanguageScreen';
 import {useLangProvider} from '../providers/LangProvider';
 import {strings} from '../languages/languages';
+import GroupsScreen from '../screens/tabs/bottoms/profile/menu/GroupsScreen';
+import CreateGroupsScreen from '../screens/tabs/bottoms/profile/menu/CreateGroupsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -95,6 +97,14 @@ const RootNavigation = () => {
     {
       name: APP_ROUTES.LANGUAGE_SCREEN,
       component: LanguageScreen,
+    },
+    {
+      name: APP_ROUTES.GROUPS_SCREEN,
+      component: GroupsScreen,
+    },
+    {
+      name: APP_ROUTES.CREATE_GROUP_SCREEN,
+      component: CreateGroupsScreen,
     },
   ];
 

@@ -6,9 +6,11 @@ export const FIRESTORE_COLLECTIONS = {
   CHEIR_REQUEST: 'cheir_request',
   SUPERVISOR_TASKS: 'supervisor_tasks',
   TEACHER_TASKS: 'teacher_tasks',
-  AUDIENCES: 'audiences'
+  AUDIENCES: 'audiences',
+  GROUPS: 'groups',
 };
 
 export const FIRESTORE_ID = {
   STATUS: 'ICMulSX0GBOmuwLEiGvT',
+  GROUP_LIST: '5p06cFJO8XgIlkkw3Y1K',
 };

@@ -37,6 +37,12 @@ const ProfileScreen = props => {
       show: true,
       params: null,
     },
+    {
+      name: 'Группы',
+      router: APP_ROUTES.GROUPS_SCREEN,
+      show: true,
+      params: null,
+    },
   ];
 
   const onPressSignOut = () => {
