@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import Viewer from '../../../../components/views/Viewer';
 import Header from '../../../../components/bars/Header';
 import {PlusIcon} from '../../../../assets/icons';
@@ -9,7 +9,9 @@ import firestore from '@react-native-firebase/firestore';
 import {APP_ROUTES} from '../../../../constants/routes';
 import {useUserProvider} from '../../../../providers/UserProvider';
 import TasksTeacherItem from './TasksTeacherItem';
-import { strings } from '../../../../languages/languages';
+import {strings} from '../../../../languages/languages';
+import Empty from '../../../../components/empty/Empty';
+import {wordLocalization} from '../../../../utils/wordLocalization';
 
 const TasksTeacherScreen = props => {
   const {userData} = useUserProvider();
@@ -29,14 +31,13 @@ const TasksTeacherScreen = props => {
       .collection(FIRESTORE_COLLECTIONS.TEACHER_TASKS)
       .get()
       .then(response => {
-        console.log(FIRESTORE_COLLECTIONS.TEACHER_TASKS, response.docs);
         const data =
           userData.role === 1
             ? response._docs.filter(item => item._data.to === userData.id)
-            : userData.role === 3 || userData.role === 2
+            : userData.role === 3 || userData.role === 2 || userData.role === 4
             ? response._docs
             : [];
-        console.log('response', response);
+        console.log(FIRESTORE_COLLECTIONS.TEACHER_TASKS, data);
         setData(prev => ({...prev, collection: data, loading: false}));
       })
       .catch(error => {
@@ -56,6 +57,32 @@ const TasksTeacherScreen = props => {
     props.navigation.navigate(APP_ROUTES.NEW_TASK_TEACHER_SCREEN, {
       getCollection: getCollection,
     });
+  };
+
+  const ListHeaderComponent = () => {
+    if (userData.role !== 1) {
+      return <View></View>;
+    }
+    var count = 0;
+    if (Array.isArray(data?.collection)) {
+      count = data.collection.reduce(function (count, element) {
+        const isTrue = element?._data?.isVisible;
+        if (isTrue === false) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }
+
+    return (
+      <Viewer style={{marginHorizontal: 16, marginVertical: 5}}>
+        <Text>
+          {wordLocalization(strings['У вас :count новых заданий'], {
+            count: count,
+          })}
+        </Text>
+      </Viewer>
+    );
   };
 
   const renderReqest = useCallback(item => {
@@ -82,17 +109,19 @@ const TasksTeacherScreen = props => {
     <Viewer>
       <Header
         label={
-          userData.role === 3 || userData.role === 2
-            ? strings['Заданий для учиников']
-            : strings['Заданий от учителя']
+          userData.role === 3 || userData.role === 2 || userData.role === 4
+            ? strings['Заданий для студентов']
+            : strings['Заданий от педагога']
         }
       />
       <Viewer loader={data.loading}>
         <FlatList
           data={data.collection}
+          ListHeaderComponent={ListHeaderComponent}
           renderItem={renderReqest}
           contentContainerStyle={styles.flatListView}
           keyExtractor={keyExtractor}
+          ListEmptyComponent={<Empty />}
           maxToRenderPerBatch={10}
           initialNumToRender={10}
           onRefresh={getCollection}

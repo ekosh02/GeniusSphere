@@ -107,6 +107,8 @@ const NewTaskTeacherScreen = props => {
       status: 0,
       from: userData.id,
       fromRole: userData.role,
+      isVisible: false,
+      grade: null,
     };
     const docRef = collectionRef.doc(); // create a new document reference
     data.id = docRef.id; // add the ID to the data object

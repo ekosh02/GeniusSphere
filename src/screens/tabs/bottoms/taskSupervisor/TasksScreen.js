@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity} from 'react-native';
+import {FlatList, StyleSheet, TouchableOpacity, Text, View} from 'react-native';
 import Viewer from '../../../../components/views/Viewer';
 import Header from '../../../../components/bars/Header';
 import {PlusIcon} from '../../../../assets/icons';
@@ -9,7 +9,9 @@ import firestore from '@react-native-firebase/firestore';
 import TasksItem from './TasksItem';
 import {APP_ROUTES} from '../../../../constants/routes';
 import {useUserProvider} from '../../../../providers/UserProvider';
-import { strings } from '../../../../languages/languages';
+import {strings} from '../../../../languages/languages';
+import Empty from '../../../../components/empty/Empty';
+import {wordLocalization} from '../../../../utils/wordLocalization';
 
 const TasksScreen = props => {
   const {userData} = useUserProvider();
@@ -29,13 +31,13 @@ const TasksScreen = props => {
       .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
       .get()
       .then(response => {
-        console.log(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS, response.docs);
         const data =
           userData.role === 2
             ? response._docs.filter(item => item._data.to === userData.id)
             : userData.role === 3 || userData.role === 4
             ? response._docs
             : [];
+        console.log(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS, data);
         setData(prev => ({...prev, collection: data, loading: false}));
       })
       .catch(error => {
@@ -73,17 +75,46 @@ const TasksScreen = props => {
     );
   }, []);
 
+  const ListHeaderComponent = () => {
+    if (userData.role !== 2) {
+      return <View></View>
+    }
+    var count = 0;
+    if (Array.isArray(data?.collection)) {
+      count = data.collection.reduce(function (count, element) {
+        const isTrue = element?._data?.isVisible;
+        if (isTrue === false) {
+          return count + 1;
+        }
+        return count;
+      }, 0);
+    }
+
+    return (
+      <Viewer style={{marginHorizontal: 16, marginVertical: 5}}>
+        <Text>
+          {wordLocalization(strings['У вас :count новых заданий'], {
+            count: count,
+          })}
+        </Text>
+      </Viewer>
+    );
+  };
+
   const keyExtractor = useCallback(item => item.id.toString(), []);
 
   return (
     <Viewer>
       <Header
         label={
-          userData.role === 3 || userData.role === 4 ? strings['Заданий для учетелей'] : strings['Заданий от админа']
+          userData.role === 3 || userData.role === 4
+            ? strings['Заданий для педагогов']
+            : strings['Заданий от руководителя']
         }
       />
       <Viewer loader={data.loading}>
         <FlatList
+          ListHeaderComponent={ListHeaderComponent}
           data={data.collection}
           renderItem={renderReqest}
           contentContainerStyle={styles.flatListView}
@@ -92,6 +123,7 @@ const TasksScreen = props => {
           initialNumToRender={10}
           onRefresh={getCollection}
           refreshing={data.loading}
+          ListEmptyComponent={<Empty />}
         />
         {userData.role === 3 || userData.role === 4 ? (
           <TouchableOpacity

@@ -7,6 +7,7 @@ import {
   Modal,
   TouchableOpacity,
   Alert,
+  TextInput,
 } from 'react-native';
 import {navHeader} from '../../../../components/bars/navHeader';
 import firestore from '@react-native-firebase/firestore';
@@ -21,6 +22,7 @@ import {useUserProvider} from '../../../../providers/UserProvider';
 import RowView from '../../../../components/views/RowView';
 import {strings} from '../../../../languages/languages';
 import PrimaryButton from '../../../../components/buttons/PrimaryButton';
+import {wordLocalization} from '../../../../utils/wordLocalization';
 
 const TaskDetailsScreen = props => {
   const {id, updateGetCollection} = props?.route?.params;
@@ -34,11 +36,18 @@ const TaskDetailsScreen = props => {
 
   useEffect(() => {
     getCollection();
+    if (userData.role === 2) {
+      onVisibleTask();
+    }
   }, []);
 
   useLayoutEffect(() => {
     navHeader(props.navigation, strings.Задания);
   }, []);
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [numberValue, setNumberValue] = useState('');
+  const [modalLoading, setModalLoading] = useState(false);
 
   const getCollection = async () => {
     setDataSource(prev => ({...prev, loading: true}));
@@ -57,6 +66,46 @@ const TaskDetailsScreen = props => {
       .catch(error => {
         console.log(error);
         setDataSource(prev => ({...prev, loading: false}));
+      });
+  };
+
+  const getCollection2 = async () => {
+    setModalLoading(true);
+    await firestore()
+      .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
+      .doc(id)
+      .get()
+      .then(response => {
+        console.log(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS, response._data);
+        setModalLoading(false);
+        setDataSource(prev => ({
+          ...prev,
+          collection: response._data,
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+        setModalLoading(false);
+      });
+  };
+
+  const onVisibleTask = () => {
+    const postRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
+      .doc(id);
+
+    postRef
+      .update({
+        isVisible: true,
+      })
+      .then(response => {
+        console.log('visible', response);
+        updateGetCollection();
+      })
+      .catch(e => {
+        Alert.alert(strings['Произошла неизвестная ошибка']);
+        console.log(e);
+        return;
       });
   };
 
@@ -130,6 +179,62 @@ const TaskDetailsScreen = props => {
       });
   };
 
+  const onPressGrade = () => {
+    if (parseInt(numberValue) < 0 || parseInt(numberValue) > 100) {
+      Alert.alert('Оценка не можеть быть выше 100 или ниже 0');
+      setModalVisible(false);
+      return;
+    }
+    setModalLoading(true);
+    const docRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.SUPERVISOR_TASKS)
+      .doc(id);
+
+    docRef
+      .update({
+        grade: parseInt(numberValue),
+      })
+      .then(() => {
+        console.log('Поле status успешно обновлено');
+        setModalVisible(false);
+        getCollection2();
+      })
+      .catch(error => {
+        console.error(error);
+        setModalVisible(false);
+        setModalLoading(false);
+      });
+  };
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleSaveNumber = () => {
+    if (!isNaN(numberValue)) {
+      onPressGrade();
+    }
+  };
+
+  const gradeColor = () => {
+    const num = dataSource?.collection?.grade;
+    if (num >= 0 && num <= 49) {
+      return '#e01409';
+    }
+    if (num >= 50 && num <= 74) {
+      return '#e68619';
+    }
+    if (num >= 75 && num <= 100) {
+      return '#01941f';
+    }
+
+    return APP_COLORS.FONT;
+  };
+
   const {title, description, status} = dataSource.collection;
 
   const currentDate = new Date();
@@ -165,9 +270,17 @@ const TaskDetailsScreen = props => {
           </TouchableOpacity>
         </RowView>
         <Text style={styles.text}>
-          {'От '}
-          {dataSource.collection.from}
+          {strings['От: ']}
+          {dataSource?.collection?.from}
         </Text>
+        {dataSource?.collection?.grade && (
+          <RowView>
+            <Text style={{...setFontStyle()}}>{strings.Оценка} </Text>
+            <Text style={{...setFontStyle(16, '400', gradeColor())}}>
+              {modalLoading ? '...' : dataSource?.collection?.grade}{' '}
+            </Text>
+          </RowView>
+        )}
       </View>
       <Modal animationType="fade" transparent={true} visible={dataSource.modal}>
         <View style={styles.centeredView}>
@@ -203,8 +316,7 @@ const TaskDetailsScreen = props => {
           style={{
             ...setFontStyle(16, '400', minutes > 0 ? APP_COLORS.FONT : 'red'),
           }}>
-          {'Deadline до '}
-          {dataSource.collection.deadline}
+          {strings['Дедлайн до:']} {dataSource.collection.deadline}
         </Text>
       </View>
       <View style={{marginHorizontal: 16, marginBottom: 10}}>
@@ -213,15 +325,23 @@ const TaskDetailsScreen = props => {
             ...setFontStyle(16, '400', minutes > 0 ? APP_COLORS.FONT : 'red'),
           }}>
           {minutes > 0
-            ? `Осталось ${days} дней, ${hours} часов, ${minutes} минут`
-            : `Задача просрочено уже как ${-days} дней, ${-hours} часов, ${-minutes} минут назад`}
+            ? wordLocalization(
+                strings['Осталось :days дней, :hours часов, :minutes минут'],
+                {days: days, hours: hours, minutes: minutes},
+              )
+            : wordLocalization(
+                strings[
+                  'Задача просрочена уже как :days дней, :hours часов, :minutes минут назад'
+                ],
+                {days: -days, hours: -hours, minutes: -minutes},
+              )}
         </Text>
       </View>
       {dataSource.collection?.subtasks ? (
         dataSource.collection?.subtasks.length !== 0 ? (
           <View style={{marginHorizontal: 16, marginBottom: 10}}>
             <Text style={{...setFontStyle}}>
-              {'Задания выполнено на '}
+              {strings['Задания выполнено на ']}
               {Math.round(
                 (dataSource.collection?.subtasks.filter(
                   subtask => subtask.status === true,
@@ -255,17 +375,48 @@ const TaskDetailsScreen = props => {
           })
         ) : (
           <Text style={{...setFontStyle(), marginHorizontal: 16}}>
-            Подзадачи нет
+            {strings['Чеклистов нету']}
           </Text>
         )
       ) : null}
+
       {userData.role === 3 || userData.role === 4 ? (
         <PrimaryButton
-          label="Удалить задачу"
-          style={{height: 42, marginVertical: 16}}
+          label={strings['Поставить оценку']}
+          style={{height: 42, marginTop: 8}}
+          onPress={handleOpenModal}
+        />
+      ) : null}
+      {console.log('userData.role', userData.role)}
+      {userData.role === 3 || userData.role === 4 ? (
+        <PrimaryButton
+          label={strings['Удалить задачу']}
+          style={{height: 42, marginTop: 16}}
           onPress={OnPressDeleteTask}
         />
       ) : null}
+      <Modal visible={modalVisible} animationType="fade" transparent>
+        <View style={styles.modalContainer}>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={text => setNumberValue(text)}
+            value={numberValue}
+          />
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              label={strings.Сохранить}
+              onPress={handleSaveNumber}
+              style={{paddingHorizontal: 10}}
+            />
+            <PrimaryButton
+              label={strings.Закрыть}
+              onPress={handleCloseModal}
+              style={{paddingHorizontal: 10}}
+            />
+          </View>
+        </View>
+      </Modal>
     </Viewer>
   );
 };
@@ -324,6 +475,29 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 6,
     borderWidth: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  input: {
+    width: '80%',
+    height: 40,
+    backgroundColor: '#fff',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
   },
 });
 

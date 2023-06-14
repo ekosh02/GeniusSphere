@@ -20,7 +20,7 @@ import PrimaryButton from '../../../../components/buttons/PrimaryButton';
 import {strings} from '../../../../languages/languages';
 import {Calendar} from 'react-native-calendars';
 import TextButton from '../../../../components/buttons/TextButton';
-import { useUserProvider } from '../../../../providers/UserProvider';
+import {useUserProvider} from '../../../../providers/UserProvider';
 
 const NewTaskScreen = props => {
   const {getCollection} = props?.route?.params;
@@ -40,6 +40,7 @@ const NewTaskScreen = props => {
     subtaskModal: false,
     calerdarModal: false,
     deadline: 0,
+    isVisible: false,
   });
 
   console.log('subtask', dataSource.deadline);
@@ -157,6 +158,8 @@ const NewTaskScreen = props => {
       subtask_result: 0,
       deadline: dataSource.deadline,
       from: userData.full_name,
+      grade: null,
+      isVisible: false,
     };
     const docRef = collectionRef.doc(); // create a new document reference
     data.id = docRef.id; // add the ID to the data object
@@ -198,7 +201,7 @@ const NewTaskScreen = props => {
         style={styles.button}
         onPress={onPressSubtaskModalModal}>
         <Text style={styles.buttonText}>
-          {'Подзадачи'} {dataSource.subtask.length}
+          {strings.Чеклист} {dataSource.subtask.length}
         </Text>
         {dataSource.subtaskModal ? <ArrowUpIcon /> : <ArrowDownIcon />}
       </TouchableOpacity>
@@ -216,7 +219,7 @@ const NewTaskScreen = props => {
       />
       <TextButton
         onPress={onPressReset}
-        label="Сбосить все"
+        label={strings['Сбросить все']}
         loader={dataSource.buttonLoading}
         style={{height: 42, marginBottom: 10}}
       />
@@ -266,13 +269,13 @@ const NewTaskScreen = props => {
               {dataSource.subtask.map((subtask, index) => (
                 <Input
                   key={index}
-                  placeholder="Введите заголовок подзадачи"
+                  placeholder={strings['Введите заголовок чеклиста']}
                   value={subtask.title}
                   onChangeText={text => handleSubtaskTitle(index, text)}
                 />
               ))}
               <PrimaryButton
-                label="Добавить подзадачу"
+                label={strings['Добавить чеклист']}
                 onPress={addSubtask}
                 style={{height: 42, marginVertical: 10}}
               />

@@ -23,6 +23,8 @@ import {useUserProvider} from '../../../../providers/UserProvider';
 import RowView from '../../../../components/views/RowView';
 import Input from '../../../../components/inputs/Input';
 import {strings} from '../../../../languages/languages';
+import PrimaryButton from '../../../../components/buttons/PrimaryButton';
+import {TextInput} from 'react-native-gesture-handler';
 
 const TaskTeacherDetailsScreen = props => {
   const {id, updateGetCollection} = props?.route?.params;
@@ -35,10 +37,17 @@ const TaskTeacherDetailsScreen = props => {
     comment: '',
   });
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [numberValue, setNumberValue] = useState('');
+  const [modalLoading, setModalLoading] = useState(false);
+
   console.log('dataSource', dataSource);
 
   useEffect(() => {
     getCollection();
+    if (userData.role === 1) {
+      onVisibleTask();
+    }
   }, []);
 
   useLayoutEffect(() => {
@@ -65,18 +74,36 @@ const TaskTeacherDetailsScreen = props => {
       });
   };
 
+  const getCollection2 = async () => {
+    setModalLoading(true);
+    await firestore()
+      .collection(FIRESTORE_COLLECTIONS.TEACHER_TASKS)
+      .doc(id)
+      .get()
+      .then(response => {
+        console.log(FIRESTORE_COLLECTIONS.TEACHER_TASKS, response._data);
+        setModalLoading(false);
+        setDataSource(prev => ({
+          ...prev,
+          collection: response._data,
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+        setModalLoading(false);
+      });
+  };
+
   const lists =
     userData.role === 3 || userData.role === 2
       ? [
           {status: 0, id: 'smdcklsdcmsmlh'},
+          {status: 1, id: 'slnvnma;sdck'},
           {status: 2, id: 'slnvnma;sdck'},
         ]
-      : [];
+      : [{status: 0}, {status: 1}];
 
   const onPressModalVisible = () => {
-    if (userData.role === 1) {
-      return;
-    }
     setDataSource(prev => ({...prev, modal: !prev.modal}));
   };
 
@@ -102,6 +129,99 @@ const TaskTeacherDetailsScreen = props => {
       });
   };
 
+  const onPressGrade = () => {
+    if (parseInt(numberValue) < 0 || parseInt(numberValue) > 100) {
+      Alert.alert('Оценка не можеть быть выше 100 или ниже 0');
+      setModalVisible(false);
+      return;
+    }
+    setModalLoading(true);
+    const docRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.TEACHER_TASKS)
+      .doc(id);
+
+    docRef
+      .update({
+        grade: parseInt(numberValue),
+      })
+      .then(() => {
+        console.log('Поле status успешно обновлено');
+        setModalVisible(false);
+        getCollection2();
+      })
+      .catch(error => {
+        console.error(error);
+        setModalVisible(false);
+        setModalLoading(false);
+      });
+  };
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  const handleSaveNumber = () => {
+    if (!isNaN(numberValue)) {
+      onPressGrade();
+    }
+  };
+
+  const gradeColor = () => {
+    const num = dataSource?.collection?.grade;
+    if (num >= 0 && num <= 49) {
+      return '#e01409';
+    }
+    if (num >= 50 && num <= 74) {
+      return '#e68619';
+    }
+    if (num >= 75 && num <= 100) {
+      return '#01941f';
+    }
+
+    return APP_COLORS.FONT;
+  };
+
+  const OnPressDeleteTask = () => {
+    const docRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.TEACHER_TASKS)
+      .doc(id);
+
+    docRef
+      .delete()
+      .then(() => {
+        updateGetCollection();
+        Alert.alert('Документ успешно удален');
+        props.navigation.goBack();
+      })
+      .catch(error => {
+        Alert.alert('Ошибка удаления документа');
+        console.error('Ошибка удаления документа: ', error);
+      });
+  };
+
+  const onVisibleTask = () => {
+    const postRef = firestore()
+      .collection(FIRESTORE_COLLECTIONS.TEACHER_TASKS)
+      .doc(id);
+
+    postRef
+      .update({
+        isVisible: true,
+      })
+      .then(response => {
+        console.log('visible', response);
+        updateGetCollection();
+      })
+      .catch(e => {
+        Alert.alert(strings['Произошла неизвестная ошибка']);
+        console.log(e);
+        return;
+      });
+  };
   const onPressSend = () => {
     if (dataSource.comment === '') {
       Alert.alert(strings['Введите поле']);
@@ -172,12 +292,15 @@ const TaskTeacherDetailsScreen = props => {
           </Text>
           {userData.role === 1 ? null : (
             <Text style={styles.text}>
-               {strings['Кому: ']}
+              {strings['Кому: ']}
               {name}
             </Text>
           )}
           <RowView>
-            <Text style={styles.text}>{'Статус:   '}</Text>
+            <Text style={styles.text}>
+              {strings.Статус}
+              {'   '}
+            </Text>
             <TouchableOpacity
               onPress={onPressModalVisible}
               style={[
@@ -187,8 +310,41 @@ const TaskTeacherDetailsScreen = props => {
               <Text style={styles.title}>{checkTaskStatus(status)}</Text>
             </TouchableOpacity>
           </RowView>
+          {dataSource?.collection?.grade && (
+            <RowView>
+              <Text style={{...setFontStyle()}}>{strings.Оценка} </Text>
+              <Text style={{...setFontStyle(16, '400', gradeColor())}}>
+                {modalLoading ? '...' : dataSource?.collection?.grade}{' '}
+              </Text>
+            </RowView>
+          )}
+          {userData.role === 3 || userData.role === 4 ? (
+            <PrimaryButton
+              label={strings['Поставить оценку']}
+              style={{
+                height: 42,
+                marginTop: 8,
+                marginHorizontal: 0,
+                width: 230,
+              }}
+              onPress={handleOpenModal}
+            />
+          ) : null}
+
+          {userData.role === 3 || userData.role === 4 ? (
+            <PrimaryButton
+              label={strings['Удалить задачу']}
+              style={{
+                height: 42,
+                marginTop: 8,
+                marginHorizontal: 0,
+                width: 230,
+              }}
+              onPress={OnPressDeleteTask}
+            />
+          ) : null}
         </View>
-        <Text style={styles.commentTitle}>{strings.Комментарий}</Text>
+        <Text style={styles.commentTitle}>{strings.Чат}</Text>
         <FlatList
           data={dataSource?.collection?.comments}
           renderItem={renderItem}
@@ -211,6 +367,7 @@ const TaskTeacherDetailsScreen = props => {
               <Xicon />
             </TouchableOpacity>
             <Viewer style={styles.modalTopView} scroll bounces>
+              {console.log('lists', lists)}
               {lists.map((list, index) => (
                 <TouchableOpacity
                   key={list.id}
@@ -228,6 +385,28 @@ const TaskTeacherDetailsScreen = props => {
                 </TouchableOpacity>
               ))}
             </Viewer>
+          </View>
+        </View>
+      </Modal>
+      <Modal visible={modalVisible} animationType="fade" transparent>
+        <View style={styles.modalContainer}>
+          <TextInput
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={text => setNumberValue(text)}
+            value={numberValue}
+          />
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              label={strings.Сохранить}
+              onPress={handleSaveNumber}
+              style={{paddingHorizontal: 10}}
+            />
+            <PrimaryButton
+              label={strings.Закрыть}
+              onPress={handleCloseModal}
+              style={{paddingHorizontal: 10}}
+            />
           </View>
         </View>
       </Modal>
@@ -325,6 +504,29 @@ const styles = StyleSheet.create({
     bottom: Platform.OS === 'ios' ? 60 : 32,
     position: 'absolute',
     right: 32,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  input: {
+    width: '80%',
+    height: 40,
+    backgroundColor: '#fff',
+    paddingHorizontal: 10,
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
   },
 });
 
