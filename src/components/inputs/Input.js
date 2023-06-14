@@ -10,11 +10,12 @@ import {HideEyeIcon, ShowEyeIcon} from '../../assets/icons';
 import {APP_COLORS} from '../../constants/colors';
 import useToggle from '../../hooks/useToggle';
 import {setFontStyle} from '../../utils/setFontStyle';
+import {strings} from '../../languages/languages';
 
 const Input = ({
   style = {},
   inputStyle = {},
-  placeholder = 'Введите значение',
+  placeholder = strings['Введите значение'],
   keyboardType = 'default', // number-pad, phone-pad
   secureTextEntry = false,
   multiline = false,
