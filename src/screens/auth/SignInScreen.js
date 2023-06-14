@@ -51,12 +51,13 @@ const SignInScreen = props => {
       .then(async response => {
         console.log('Sign in', response);
         const token = response?.user?.uid;
+        console.log('token', token);
         await firestore()
           .collection(FIRESTORE_COLLECTIONS.USERS)
           .doc(token)
           .get()
           .then(response => {
-            console.log('user', response._data);
+            console.log('user', response);
             setUserData(response._data);
             setStorageObject(APP_KEYS.USER_DATA, response._data);
             setLoading(false);
@@ -71,23 +72,16 @@ const SignInScreen = props => {
       })
       .catch(error => {
         if (error?.code === 'auth/wrong-password') {
-          console.log(
-            'The password is invalid or the user does not have a password!',
-          );
           Alert.alert(strings['Пароль недействителен или у пользователя нет пароля!']);
           setLoading(false);
           return;
         }
         if (error?.code === 'auth/invalid-email') {
-          console.log('The email address is badly formatted!');
           Alert.alert(strings['Адрес электронной почты имеет неправильный формат!']);
           setLoading(false);
           return;
         }
         if (error?.code === 'auth/user-not-found') {
-          console.log(
-            'There is no user record corresponding to this identifier. The user may have been deleted.',
-          );
           Alert.alert(
             strings['Нет записи пользователя, соответствующей этому идентификатору. Возможно, пользователь был удален'],
           );
