@@ -1,15 +1,13 @@
-import React, {useLayoutEffect, useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  Modal,
   Alert,
   FlatList,
 } from 'react-native';
 import Viewer from '../../../../components/views/Viewer';
-import {navHeader} from '../../../../components/bars/navHeader';
 import Input from '../../../../components/inputs/Input';
 import {FIRESTORE_COLLECTIONS} from '../../../../constants/firestore';
 import firestore from '@react-native-firebase/firestore';
@@ -18,9 +16,11 @@ import {WIDTH} from '../../../../constants/screenDimensions';
 import PrimaryButton from '../../../../components/buttons/PrimaryButton';
 import Header from '../../../../components/bars/Header';
 import {strings} from '../../../../languages/languages';
-import {setFontStyle} from '../../../../utils/setFontStyle';
+import {useUserProvider} from '../../../../providers/UserProvider';
 
 const NewAudienceScreen = props => {
+  const {userData} = useUserProvider();
+
   const [dataSource, setDataSource] = useState({
     collection: [],
     loading: false,
@@ -31,12 +31,36 @@ const NewAudienceScreen = props => {
     groups: [],
     selectedGroups: [],
     choosedMembers: [],
+    teachers: [],
+    teacherData: {},
   });
 
   useEffect(() => {
-    getCollection();
+    setDataSource(prev => ({...prev, loading: true}));
+    getCollection(false);
     getMember();
+    getTeacher();
+    setDataSource(prev => ({...prev, loading: false}));
   }, []);
+
+  const getTeacher = async () => {
+    await firestore()
+      .collection(FIRESTORE_COLLECTIONS.USERS)
+      .get()
+      .then(response => {
+        const teachers = response._docs.filter(
+          teacher => teacher._data.role === 2,
+        );
+        console.log(FIRESTORE_COLLECTIONS.USERS, teachers);
+        setDataSource(prev => ({
+          ...prev,
+          teachers: teachers,
+        }));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const getMember = async () => {
     await firestore()
@@ -54,8 +78,10 @@ const NewAudienceScreen = props => {
       });
   };
 
-  const getCollection = async () => {
-    setDataSource(prev => ({...prev, loading: true}));
+  const getCollection = async checkLoading => {
+    if (checkLoading) {
+      setDataSource(prev => ({...prev, loading: true}));
+    }
     await firestore()
       .collection(FIRESTORE_COLLECTIONS.AUDIENCES)
       .get()
@@ -64,19 +90,21 @@ const NewAudienceScreen = props => {
         setDataSource(prev => ({
           ...prev,
           collection: response?.docs,
-          loading: false,
         }));
+        if (checkLoading) {
+          setDataSource(prev => ({...prev, loading: false}));
+        }
       })
       .catch(error => {
         console.log(error);
-        setDataSource(prev => ({...prev, loading: false}));
+        if (checkLoading) {
+          setDataSource(prev => ({...prev, loading: false}));
+        }
       });
   };
 
-  console.log('dataSource.selectedGroups', dataSource.selectedGroups);
-
   const getBooking = async (time, conditional) => {
-    setDataSource(prev => ({...prev, loading: true}));
+    // setDataSource(prev => ({...prev, loading: true}));
 
     const documentRef = firestore()
       .collection(FIRESTORE_COLLECTIONS.AUDIENCES)
@@ -102,6 +130,7 @@ const NewAudienceScreen = props => {
             busy: false,
             subject: '',
             groups: [],
+            teacher: {},
           };
         } else if (conditional === 'add') {
           if (array[index].busy === true) {
@@ -113,6 +142,7 @@ const NewAudienceScreen = props => {
             busy: true,
             subject: dataSource.subject,
             groups: dataSource.selectedGroups,
+            teacher: dataSource.teacherData,
           };
         } else {
           setDataSource(prev => ({...prev, loading: false}));
@@ -126,7 +156,7 @@ const NewAudienceScreen = props => {
             booking: array,
           })
           .then(() => {
-            getCollection();
+            getCollection(true);
           })
           .catch(error => {
             console.log(error);
@@ -135,9 +165,17 @@ const NewAudienceScreen = props => {
       })
       .catch(error => {
         console.log('Error getting document: ', error);
+        setDataSource(prev => ({...prev, loading: false}));
       });
   };
 
+  const isButtonActive = () => {
+    const {role} = userData;
+    if (role === 1 || role === 2) {
+      return true;
+    }
+    return false;
+  };
   const onPressChooseAudience = id => {
     setDataSource(prev => ({...prev, audienceActive: id}));
   };
@@ -170,6 +208,9 @@ const NewAudienceScreen = props => {
   };
 
   const onPressChooseMember = name => {
+    if (isButtonActive() === true) {
+      return;
+    }
     const existingMember = dataSource.selectedGroups.find(
       group => group.name === name,
     );
@@ -188,14 +229,24 @@ const NewAudienceScreen = props => {
     }
   };
 
+  const onPressChooseTeacher = teacherData => {
+    if (isButtonActive() === true) {
+      return;
+    }
+    if (teacherData.id === dataSource.teacherData.id) {
+      setDataSource(prev => ({...prev, teacherData: {}}));
+      return;
+    }
+    setDataSource(prev => ({...prev, teacherData: teacherData}));
+  };
+
   const keyExtractor = useCallback(index => {
     return index.toString();
   }, []);
 
   const renderTime = useCallback(
     (item, index, id) => {
-      const {busy, subject, time, members, groups} = item;
-
+      const {busy, subject, time, members, groups, teacher} = item;
       return (
         <RenderTime
           index={index}
@@ -203,11 +254,13 @@ const NewAudienceScreen = props => {
           subject={subject}
           time={time}
           id={id}
+          teacher={teacher}
           timeActive={dataSource.timeActive}
           audienceActive={dataSource.audienceActive}
           members={members}
           groups={groups}
           onPress={onPressRenderTime}
+          isButtonActive={isButtonActive}
         />
       );
     },
@@ -216,14 +269,17 @@ const NewAudienceScreen = props => {
 
   return (
     <Viewer loader={dataSource.loading}>
-      <Header label={strings.Аудитория} />
-      <Viewer scroll bounces>
+      <Header label={strings.Аудиторий} />
+
+      {isButtonActive() === true ? null : (
         <Input
           placeholder={strings.Предмет}
           style={styles.view}
           getValue={value => setDataSource(prev => ({...prev, subject: value}))}
         />
+      )}
 
+      <Viewer scroll>
         <Text style={styles.title}>{strings.Аудитория}</Text>
 
         {dataSource.collection.map(data => {
@@ -247,14 +303,39 @@ const NewAudienceScreen = props => {
                   data={booking}
                   renderItem={({item, index}) => renderTime(item, index, id)}
                   keyExtractor={(item, index) => `${id}_${index}`}
-                  numColumns={4}
+                  numColumns={3}
                   contentContainerStyle={styles.contentContainer}
                 />
               ) : null}
             </View>
           );
         })}
-        <Text style={styles.title}>{strings.Ученики}</Text>
+        <Text style={styles.title}>{strings.Педагог}</Text>
+        {dataSource.teachers.map((teacher, index) => {
+          console.log('teacher', teacher);
+          const {full_name, id} = teacher._data;
+          return (
+            <TouchableOpacity
+              key={index}
+              onPress={() => onPressChooseTeacher(teacher._data)}
+              style={{
+                width: WIDTH / 3,
+                paddingHorizontal: 8,
+                paddingVertical: 8,
+                borderWidth: 1,
+                marginHorizontal: 16,
+                marginVertical: 8,
+                borderRadius: 10,
+                borderColor:
+                  dataSource.teacherData.id === id
+                    ? APP_COLORS.PRIMARY
+                    : APP_COLORS.BORDER,
+              }}>
+              <Text>{full_name}</Text>
+            </TouchableOpacity>
+          );
+        })}
+        <Text style={styles.title}>{strings.Группы}</Text>
         {dataSource.groups.map((group, index) => {
           const {lists, name} = group._data;
           const isSelected = dataSource.selectedGroups.some(
@@ -310,6 +391,8 @@ const RenderTime = ({
   audienceActive,
   members,
   groups,
+  teacher,
+  isButtonActive,
   onPress = () => undefined,
 }) => {
   const color = () => {
@@ -323,6 +406,17 @@ const RenderTime = ({
     }
   };
 
+  function isEmptyObject(obj) {
+    return Object.keys(obj).length === 0;
+  }
+
+  const sdjhbchsd = () => {
+    if (isButtonActive() === true) {
+      return;
+    }
+    onPress(busy, subject, time, index);
+  };
+
   return (
     <TouchableOpacity
       style={[
@@ -332,10 +426,41 @@ const RenderTime = ({
         },
       ]}
       activeOpacity={0.8}
-      onPress={() => onPress(busy, subject, time, index)}>
+      onPress={sdjhbchsd}>
       <Text>{time}</Text>
       <Text numberOfLines={1}>{subject}</Text>
-      {groups && <Text numberOfLines={1}>{groups.length}</Text>}
+      {teacher &&
+        (isEmptyObject(teacher) ? null : (
+          <View
+            style={{
+              marginTop: 10,
+              backgroundColor: APP_COLORS.BORDER,
+              borderRadius: 6,
+              paddingVertical: 5,
+              paddingHorizontal: 5,
+            }}>
+            <Text>
+              Педагог:{'\n'}
+              {teacher.full_name}
+            </Text>
+          </View>
+        ))}
+      {groups &&
+        (groups.length === 0 ? null : (
+          <View
+            style={{
+              marginTop: 10,
+              backgroundColor: APP_COLORS.BORDER,
+              borderRadius: 6,
+              paddingVertical: 5,
+              paddingHorizontal: 5,
+            }}>
+            <Text style={{}}>Группа:</Text>
+            {groups.map((group, index) => {
+              return <Text key={index}>{group.name}</Text>;
+            })}
+          </View>
+        ))}
     </TouchableOpacity>
   );
 };
@@ -365,7 +490,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 4,
-    width: WIDTH / 4.8,
+    width: WIDTH / 3.5,
   },
   title: {
     marginHorizontal: 16,
@@ -382,5 +507,3 @@ const styles = StyleSheet.create({
 });
 
 export default NewAudienceScreen;
-
-//Оқушыларға жаңа аудитория ашу сағат 12:00 де
