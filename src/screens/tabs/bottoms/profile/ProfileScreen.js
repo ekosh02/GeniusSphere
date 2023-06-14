@@ -38,7 +38,7 @@ const ProfileScreen = props => {
       params: null,
     },
     {
-      name: 'Группы',
+      name: strings.Группы,
       router: APP_ROUTES.GROUPS_SCREEN,
       show: true,
       params: null,
