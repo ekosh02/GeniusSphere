@@ -11,15 +11,19 @@ import {PlusIcon} from '../../../../../assets/icons';
 import {APP_COLORS} from '../../../../../constants/colors';
 import {APP_ROUTES} from '../../../../../constants/routes';
 import {FlatList} from 'react-native-gesture-handler';
+import {strings} from '../../../../../languages/languages';
+import {useUserProvider} from '../../../../../providers/UserProvider';
 
 const GroupsScreen = props => {
+  const {userData} = useUserProvider();
+
   const [data, setData] = useState({
     loading: true,
     collection: null,
   });
 
   useLayoutEffect(() => {
-    navHeader(props.navigation, 'Группы');
+    navHeader(props.navigation, strings.Группы);
   }, []);
 
   useEffect(() => {
@@ -63,8 +67,7 @@ const GroupsScreen = props => {
         <Text>
           {name}
           {' | '}
-          {'Кол-во cтудентов '}
-          {lists.length}
+          {lists.length} {strings['студент(ов)']}
         </Text>
       </View>
     );
@@ -77,12 +80,14 @@ const GroupsScreen = props => {
         renderItem={groupItem}
         keyExtractor={(item, index) => index.toString()}
       />
-      <TouchableOpacity
-        style={styles.plusIcon}
-        onPress={onPressCreateGroup}
-        activeOpacity={0.8}>
-        <PlusIcon />
-      </TouchableOpacity>
+      {userData.role === 1 ? null : (
+        <TouchableOpacity
+          style={styles.plusIcon}
+          onPress={onPressCreateGroup}
+          activeOpacity={0.8}>
+          <PlusIcon />
+        </TouchableOpacity>
+      )}
     </Viewer>
   );
 };

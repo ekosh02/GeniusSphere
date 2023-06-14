@@ -13,6 +13,7 @@ import {FIRESTORE_COLLECTIONS} from '../../../../../constants/firestore';
 import firestore from '@react-native-firebase/firestore';
 import {APP_COLORS} from '../../../../../constants/colors';
 import {HEIGHT, WIDTH} from '../../../../../constants/screenDimensions';
+import { strings } from '../../../../../languages/languages';
 
 const CreateGroupsScreen = props => {
   const [dataSource, setDataSource] = useState({
@@ -25,7 +26,7 @@ const CreateGroupsScreen = props => {
   });
 
   useLayoutEffect(() => {
-    navHeader(props.navigation, 'Добавление в группу');
+    navHeader(props.navigation, strings['Добавление в группу']);
   }, []);
 
   useEffect(() => {
@@ -98,6 +99,10 @@ const CreateGroupsScreen = props => {
   };
 
   const addOrRemoveStudentFromGroup = async doc => {
+    setDataSource(prev => ({
+      ...prev,
+      loading: true,
+    }));
     try {
       const {selectedMember} = dataSource;
       const {full_name, email, id} = selectedMember;
@@ -120,6 +125,7 @@ const CreateGroupsScreen = props => {
             groupData.lists[existingMemberIndex],
           ),
         });
+       
       } else {
         // Member does not exist, add them to the group
         await groupRef.update({
@@ -127,9 +133,18 @@ const CreateGroupsScreen = props => {
         });
       }
 
+      setDataSource(prev => ({
+        ...prev,
+        loading: false,
+      }));
+
       closeModal();
     } catch (error) {
       console.log(error);
+      setDataSource(prev => ({
+        ...prev,
+        loading: false,
+      }));
     }
   };
 
@@ -177,9 +192,9 @@ const CreateGroupsScreen = props => {
               style={styles.modalContent}
               onPress={null}
               activeOpacity={1}>
-              <Text>ID: {dataSource.selectedMember.id}</Text>
-              <Text>Email: {dataSource.selectedMember.email}</Text>
-              <Text>Full Name: {dataSource.selectedMember.full_name}</Text>
+              {/* <Text>ID: {dataSource.selectedMember.id}</Text> */}
+              <Text>{strings['Электронная почта']}: {dataSource.selectedMember.email}</Text>
+              <Text>{strings['Полное имя']}: {dataSource.selectedMember.full_name}</Text>
 
               <Viewer
                 loader={dataSource.loadingGroupsList}
@@ -189,7 +204,7 @@ const CreateGroupsScreen = props => {
                   flex: undefined,
                   width: WIDTH - 100,
                 }}>
-                <Text>Список группы:</Text>
+                <Text>{strings['Список группы:']}</Text>
                 {dataSource.listGroups.map((group, index) => {
                   const {name, lists} = group._data;
                   const doc = group._ref._documentPath._parts[1];
